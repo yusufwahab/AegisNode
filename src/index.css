@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@import "@fontsource/fraunces/400.css";
+@import "@fontsource/fraunces/500.css";
+@import "@fontsource/fraunces/500-italic.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+
+@theme {
+  /* Color system — see prompt.md 1.1. Two brand colors, one alert color, neutrals do the rest. */
+  --color-ink: #12181b;
+  --color-ink-deep: #0b0f10;
+  --color-paper: #faf9f6;
+  --color-teal: #0e4f45;
+  --color-teal-light: #d9e6e3;
+  --color-coral: #e4572e;
+  --color-mist: #e8e6e0;
+  --color-slate: #5b6664;
+
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --ease-aegis: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --radius-sm: 8px;
+  --radius-card: 16px;
+  --radius-lg: 24px;
+
+  /* Tailwind's default breakpoints (sm 640 / md 768 / lg 1024 / xl 1280 /
+     2xl 1536) are left as-is so `lg:` lines up with prompt.md's "desktop
+     1024px+" boundary — components use `lg:` for the mobile/tablet →
+     desktop split called out in the responsiveness section, and `md:`
+     for finer tablet-scale adjustments. Content width is capped
+     separately via .content-container below, so wide screens (1440px+)
+     just get more side whitespace rather than a dedicated breakpoint. */
+
+  --container-content: 1280px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    line-height: 1.65;
+  }
+
+  ::selection {
+    background-color: var(--color-teal);
+    color: var(--color-paper);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@keyframes pulse-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@layer utilities {
+  .content-container {
+    width: 100%;
+    max-width: var(--container-content);
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+
+  @media (min-width: 1024px) {
+    .content-container {
+      padding-inline: 64px;
+    }
+  }
+}
