@@ -2,12 +2,18 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import UnsplashImage from "./ui/UnsplashImage";
 import PulseRings from "./ui/PulseRings";
+import NfcMark from "./ui/NfcMark";
 import { useReducedMotion } from "../lib/motion";
 
 /**
  * The phone-tap + sonar-ring + data-readout composite. Ambient/looping in
  * the hero, one-shot (loop=false + onComplete) when triggered from the
  * scan demo — same visual language, two playback modes.
+ *
+ * No stock photo shows "phone tapping our tag" (it's not a real product
+ * yet), so the tag itself is an illustrated card — inset the phone photo
+ * so the card can peek out from behind its bottom-right edge, right where
+ * the pulse rings fire.
  */
 export default function NfcScanVisual({
   loop = true,
@@ -33,15 +39,30 @@ export default function NfcScanVisual({
 
   return (
     <div className={className} style={{ position: "relative" }}>
-      <UnsplashImage
-        query="smartphone hand dark background"
-        orientation="portrait"
-        className="h-full w-full rounded-lg"
-        imgClassName="[filter:saturate(0.7)_brightness(0.85)]"
-        showAttribution={loop}
-      />
+      {/* The Aegis Node tag, peeking out from behind the phone's lower-right edge */}
+      <div
+        className="absolute bottom-[9%] right-0 z-0 flex h-[24%] w-[42%] items-end justify-start rounded-card p-3 shadow-lg"
+        style={{
+          background: "linear-gradient(150deg, #0E4F45 0%, #0B0F10 100%)",
+          transform: "rotate(-9deg)",
+        }}
+      >
+        <NfcMark className="h-4 w-4" color="#FAF9F6" />
+      </div>
 
-      <div className="absolute left-1/2 top-[55%] -translate-x-1/2 -translate-y-1/2">
+      {/* Phone photo, inset from the right so the tag shows beside/behind it */}
+      <div className="absolute inset-y-0 left-0 z-10 w-[80%]">
+        <UnsplashImage
+          query="smartphone hand dark background"
+          orientation="portrait"
+          className="h-full w-full rounded-lg"
+          imgClassName="[filter:saturate(0.7)_brightness(0.85)]"
+          showAttribution={loop}
+        />
+      </div>
+
+      {/* Tap point sits at the seam between phone and tag */}
+      <div className="absolute z-20" style={{ left: "76%", top: "68%", transform: "translate(-50%, -50%)" }}>
         <PulseRings
           loop={loop}
           onComplete={onComplete}
@@ -52,7 +73,10 @@ export default function NfcScanVisual({
       </div>
 
       {showCaptureCard && (
-        <div className="absolute left-1/2 top-[28%] hidden -translate-x-1/2 md:block">
+        <div
+          className="absolute z-20 hidden -translate-x-1/2 md:block"
+          style={{ left: "40%", top: "26%" }}
+        >
           <AnimatePresence>
             {captured && (
               <motion.div
