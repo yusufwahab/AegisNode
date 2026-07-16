@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import UnsplashImage from "../ui/UnsplashImage";
+import Button from "../ui/Button";
 import { Reveal } from "../ui/Reveal";
 
 const PANELS = [
@@ -25,6 +26,8 @@ const PANELS = [
     ],
     cta: "See responder view →",
     to: "/scan-demo",
+    secondaryCta: "Medical Dashboard",
+    secondaryTo: "/hospital-dashboard",
   },
 ];
 
@@ -50,10 +53,17 @@ export default function AudienceSplit() {
             </ul>
             <Link
               to={panel.to}
-              className="mt-5 inline-block text-sm font-medium text-teal bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-[position:0_100%] bg-no-repeat transition-[background-size] duration-300 ease-out group-hover:bg-[length:100%_1px] pb-0.5"
+              className="mt-5 inline-block text-sm font-medium text-teal bg-[linear-gradient(currentColor,currentColor)] bg-size-[0%_1px] bg-position-[0_100%] bg-no-repeat transition-[background-size] duration-300 ease-out group-hover:bg-size-[100%_1px] pb-0.5"
             >
               {panel.cta}
             </Link>
+            {panel.secondaryTo && (
+              <div className="mt-4">
+                <Button as={Link} to={panel.secondaryTo} variant="secondary" size="sm">
+                  {panel.secondaryCta}
+                </Button>
+              </div>
+            )}
           </Reveal>
         ))}
       </div>

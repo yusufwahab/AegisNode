@@ -30,7 +30,9 @@ export default function Navbar({ transparentOnTop = true }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const isScanDemo = location.pathname === "/scan-demo";
-  const mobileLinks = isScanDemo ? DASHBOARD_MOBILE_LINKS : [...LINKS, { to: "/dashboard", label: "Dashboard" }];
+  const mobileLinks = isScanDemo
+    ? DASHBOARD_MOBILE_LINKS
+    : [...LINKS, { to: "/dashboard", label: "Dashboard" }, { to: "/hospital-dashboard", label: "Medical Dashboard" }];
 
   useEffect(() => {
     if (!transparentOnTop) return;
@@ -97,6 +99,15 @@ export default function Navbar({ transparentOnTop = true }) {
             )}
           >
             Dashboard
+          </Link>
+          <Link
+            to="/hospital-dashboard"
+            className={clsx(
+              "text-sm font-medium transition-colors duration-300",
+              solid ? "text-ink/80 hover:text-teal" : "text-paper/80 hover:text-paper"
+            )}
+          >
+            Medical Dashboard
           </Link>
           <Button as={Link} to="/order" variant="primary" size="sm">
             Get Your Tag
