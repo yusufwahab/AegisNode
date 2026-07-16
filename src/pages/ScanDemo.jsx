@@ -123,7 +123,7 @@ export default function ScanDemo() {
   return (
     <div className="content-container flex min-h-[80vh] flex-col items-center justify-center py-16 text-center md:py-24">
       <Reveal>
-        <p className="text-sm font-medium uppercase tracking-wider text-teal">Scan Demo</p>
+        <p className="text-sm font-medium uppercase tracking-wider text-teal">Responder View</p>
         <h1 className="mt-3 max-w-xl text-3xl text-ink md:text-5xl">
           Experience the responder's side, no hardware required.
         </h1>
@@ -273,7 +273,7 @@ export default function ScanDemo() {
               )}
 
               <Button variant="ghost-ink" className="mt-3 w-full" onClick={() => setStage("idle")}>
-                Reset Demo
+                Scan Again
               </Button>
             </motion.div>
           )}

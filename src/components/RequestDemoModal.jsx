@@ -12,13 +12,13 @@ export default function RequestDemoModal({ open, onClose }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    pushToast?.("Demo request sent — we'll be in touch shortly.");
+    pushToast?.("Request sent — we'll be in touch shortly.");
     setForm({ name: "", org: "", email: "", message: "" });
     onClose();
   }
 
   return (
-    <Modal open={open} onClose={onClose} title="Request a Partner Demo">
+    <Modal open={open} onClose={onClose} title="Request a Partner Walkthrough">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
           <label className="mb-1.5 block text-sm font-medium text-ink">Name</label>

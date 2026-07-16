@@ -46,7 +46,7 @@ export default function Hospitals() {
             className="mt-9"
           >
             <Button variant="coral" size="lg" onClick={() => setDemoOpen(true)}>
-              Request a Partner Demo
+              Request a Partner Walkthrough
             </Button>
           </motion.div>
         </div>
@@ -87,7 +87,7 @@ export default function Hospitals() {
 
       <FinalCtaBand
         headline="Ready to see it on your floor?"
-        ctaLabel="Request a Partner Demo"
+        ctaLabel="Request a Partner Walkthrough"
         onCtaClick={() => setDemoOpen(true)}
       />
 

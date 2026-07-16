@@ -129,7 +129,7 @@ export default function IncomingAlerts() {
         </div>
         <Button variant="secondary" size="sm" onClick={simulateNewAlert}>
           <Bell size={15} strokeWidth={1.5} />
-          Simulate New Alert (Demo)
+          Simulate New Alert
         </Button>
       </div>
 

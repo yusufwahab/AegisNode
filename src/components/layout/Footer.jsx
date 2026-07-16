@@ -11,7 +11,7 @@ const COLUMNS = [
       { label: "How It Works", to: "/how-it-works" },
       { label: "For Hospitals", to: "/hospitals" },
       { label: "Pricing", to: "/order" },
-      { label: "Try the Scan Demo", to: "/scan-demo" },
+      { label: "Try a Live Scan", to: "/scan-demo" },
     ],
   },
   {
