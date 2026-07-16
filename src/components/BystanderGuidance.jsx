@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Volume2, VolumeX, MessageCircleWarning } from "lucide-react";
+import { useRef, useState } from "react";
+import { Volume2, VolumeX, MessageCircleWarning, AlertTriangle } from "lucide-react";
 
 function buildRecommendation(profile) {
   const sentences = [];
@@ -30,64 +30,94 @@ function buildRecommendation(profile) {
   return sentences.join(" ");
 }
 
-function speakOnce(text, onEnd) {
+// Voice lists load asynchronously and can be empty on the very first call —
+// waiting for the list (or the voiceschanged event) avoids a silent no-op.
+function getVoicesReady() {
+  return new Promise((resolve) => {
+    const existing = window.speechSynthesis.getVoices();
+    if (existing.length > 0) {
+      resolve(existing);
+      return;
+    }
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      window.speechSynthesis.removeEventListener("voiceschanged", finish);
+      resolve(window.speechSynthesis.getVoices());
+    };
+    window.speechSynthesis.addEventListener("voiceschanged", finish);
+    setTimeout(finish, 1000);
+  });
+}
+
+async function speakOnce(text, { onEnd, onNoVoice }) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+
+  const voices = await getVoicesReady();
+  if (voices.length === 0) {
+    onNoVoice?.();
+    return;
+  }
+
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.rate = 0.95;
   utterance.pitch = 1;
+  utterance.voice = voices.find((v) => v.lang?.toLowerCase().startsWith("en")) || voices[0];
   utterance.onend = onEnd;
   utterance.onerror = onEnd;
   window.speechSynthesis.speak(utterance);
 }
 
 const REPEAT_GAP_MS = 1500;
+const RESUME_KEEPALIVE_MS = 5000;
 
 /**
  * Rule-based bystander guidance, not a real LLM call — generated from the
- * patient's own structured tag data (allergies/conditions/contact), then
- * read aloud on a loop with the browser's built-in speech synthesis.
- * Standing in for a real voice model (e.g. YarnGPT) without needing an API
- * key or network call, which matters for something that has to work
- * reliably mid-pitch. Loops continuously until the user hits Stop.
+ * patient's own structured tag data, read aloud on a loop with the
+ * browser's built-in speech synthesis once the user presses Play. Manual
+ * start/stop only — no autoplay, since many mobile browsers silently block
+ * audio that isn't triggered by an explicit tap anyway.
  */
 export default function BystanderGuidance({ profile }) {
   const [message] = useState(() => buildRecommendation(profile));
-  const [active, setActive] = useState(true);
+  const [active, setActive] = useState(false);
+  const [noVoice, setNoVoice] = useState(false);
   const [supported] = useState(() => typeof window !== "undefined" && "speechSynthesis" in window);
-  const activeRef = useRef(true);
+  const activeRef = useRef(false);
   const timeoutRef = useRef(null);
+  const keepAliveRef = useRef(null);
 
   function loop() {
-    speakOnce(message, () => {
-      if (!activeRef.current) return;
-      timeoutRef.current = setTimeout(() => {
-        if (activeRef.current) loop();
-      }, REPEAT_GAP_MS);
+    speakOnce(message, {
+      onEnd: () => {
+        if (!activeRef.current) return;
+        timeoutRef.current = setTimeout(() => {
+          if (activeRef.current) loop();
+        }, REPEAT_GAP_MS);
+      },
+      onNoVoice: () => setNoVoice(true),
     });
   }
-
-  useEffect(() => {
-    activeRef.current = true;
-    loop();
-    return () => {
-      activeRef.current = false;
-      clearTimeout(timeoutRef.current);
-      if (supported) window.speechSynthesis.cancel();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- loop() intentionally starts fresh only when the message itself changes
-  }, [message]);
 
   function handleToggle() {
     if (activeRef.current) {
       activeRef.current = false;
       clearTimeout(timeoutRef.current);
+      clearInterval(keepAliveRef.current);
       window.speechSynthesis.cancel();
       setActive(false);
     } else {
       activeRef.current = true;
       setActive(true);
+      setNoVoice(false);
       loop();
+      keepAliveRef.current = setInterval(() => {
+        if (activeRef.current && window.speechSynthesis.speaking) {
+          window.speechSynthesis.resume();
+        }
+      }, RESUME_KEEPALIVE_MS);
     }
   }
 
@@ -112,9 +142,22 @@ export default function BystanderGuidance({ profile }) {
 
       <p className="mt-3 text-[15px] leading-relaxed text-ink">{message}</p>
 
+      {noVoice && (
+        <p className="mt-3 flex items-center gap-1.5 text-sm text-coral">
+          <AlertTriangle size={14} strokeWidth={1.5} />
+          No voice found on this device yet — text is shown above; try Play again in a moment.
+        </p>
+      )}
+      {!supported && (
+        <p className="mt-3 flex items-center gap-1.5 text-sm text-coral">
+          <AlertTriangle size={14} strokeWidth={1.5} />
+          Your browser doesn't support text-to-speech — showing the text instead.
+        </p>
+      )}
+
       <p className="mt-3 text-[11px] text-slate/70">
-        Simulated preview, not a substitute for professional medical advice — read aloud on a loop using your
-        browser's built-in voice until you hit stop.
+        Simulated preview, not a substitute for professional medical advice — press Play to hear it read aloud
+        using your browser's built-in voice.
       </p>
     </div>
   );
