@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX, MessageCircleWarning } from "lucide-react";
 
 function buildRecommendation(profile) {
@@ -30,47 +30,64 @@ function buildRecommendation(profile) {
   return sentences.join(" ");
 }
 
-function speak(text, { onStart, onEnd } = {}) {
+function speakOnce(text, onEnd) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.rate = 0.95;
   utterance.pitch = 1;
-  utterance.onstart = () => onStart?.();
-  utterance.onend = () => onEnd?.();
-  utterance.onerror = () => onEnd?.();
+  utterance.onend = onEnd;
+  utterance.onerror = onEnd;
   window.speechSynthesis.speak(utterance);
 }
+
+const REPEAT_GAP_MS = 1500;
 
 /**
  * Rule-based bystander guidance, not a real LLM call — generated from the
  * patient's own structured tag data (allergies/conditions/contact), then
- * read aloud with the browser's built-in speech synthesis. Standing in for
- * a real voice model (e.g. YarnGPT) without needing an API key or network
- * call, which matters for something that has to work reliably mid-pitch.
+ * read aloud on a loop with the browser's built-in speech synthesis.
+ * Standing in for a real voice model (e.g. YarnGPT) without needing an API
+ * key or network call, which matters for something that has to work
+ * reliably mid-pitch. Loops continuously until the user hits Stop.
  */
 export default function BystanderGuidance({ profile }) {
   const [message] = useState(() => buildRecommendation(profile));
-  const [speaking, setSpeaking] = useState(false);
-  const [supported] = useState(
-    () => typeof window !== "undefined" && "speechSynthesis" in window
-  );
+  const [active, setActive] = useState(true);
+  const [supported] = useState(() => typeof window !== "undefined" && "speechSynthesis" in window);
+  const activeRef = useRef(true);
+  const timeoutRef = useRef(null);
+
+  function loop() {
+    speakOnce(message, () => {
+      if (!activeRef.current) return;
+      timeoutRef.current = setTimeout(() => {
+        if (activeRef.current) loop();
+      }, REPEAT_GAP_MS);
+    });
+  }
 
   useEffect(() => {
-    speak(message, { onStart: () => setSpeaking(true), onEnd: () => setSpeaking(false) });
+    activeRef.current = true;
+    loop();
     return () => {
-      if (typeof window !== "undefined" && "speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
+      activeRef.current = false;
+      clearTimeout(timeoutRef.current);
+      if (supported) window.speechSynthesis.cancel();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- loop() intentionally starts fresh only when the message itself changes
   }, [message]);
 
   function handleToggle() {
-    if (speaking) {
+    if (activeRef.current) {
+      activeRef.current = false;
+      clearTimeout(timeoutRef.current);
       window.speechSynthesis.cancel();
-      setSpeaking(false);
+      setActive(false);
     } else {
-      speak(message, { onStart: () => setSpeaking(true), onEnd: () => setSpeaking(false) });
+      activeRef.current = true;
+      setActive(true);
+      loop();
     }
   }
 
@@ -87,8 +104,8 @@ export default function BystanderGuidance({ profile }) {
             onClick={handleToggle}
             className="flex min-h-9 items-center gap-1.5 rounded-full border border-teal/40 bg-paper px-3 text-xs font-medium text-teal hover:bg-teal-light"
           >
-            {speaking ? <VolumeX size={14} strokeWidth={1.5} /> : <Volume2 size={14} strokeWidth={1.5} />}
-            {speaking ? "Stop" : "Play"}
+            {active ? <VolumeX size={14} strokeWidth={1.5} /> : <Volume2 size={14} strokeWidth={1.5} />}
+            {active ? "Stop" : "Play"}
           </button>
         )}
       </div>
@@ -96,8 +113,8 @@ export default function BystanderGuidance({ profile }) {
       <p className="mt-3 text-[15px] leading-relaxed text-ink">{message}</p>
 
       <p className="mt-3 text-[11px] text-slate/70">
-        Simulated preview, not a substitute for professional medical advice — read aloud using your browser's
-        built-in voice.
+        Simulated preview, not a substitute for professional medical advice — read aloud on a loop using your
+        browser's built-in voice until you hit stop.
       </p>
     </div>
   );
