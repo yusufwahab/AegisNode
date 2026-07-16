@@ -9,7 +9,7 @@ import { mockProfile } from "../../lib/mockData";
 
 export default function Settings() {
   const [name, setName] = useState(mockProfile.name);
-  const [email, setEmail] = useState("amara.chukwu@example.com");
+  const [email, setEmail] = useState("tunde.adegbola@example.com");
   const [password, setPassword] = useState("");
   const [notifications, setNotifications] = useState({
     syncAlerts: true,

@@ -29,3 +29,8 @@ export function updateAlertStatus(id, status) {
     body: JSON.stringify({ status }),
   });
 }
+
+// Emails the hospital (with a CSV attachment) and the emergency contact.
+export function notifyHospital(profile) {
+  return request("/api/notify", { method: "POST", body: JSON.stringify(profile) });
+}

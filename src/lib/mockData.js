@@ -1,17 +1,19 @@
+// Hardcoded as the default session user while real auth is disabled — matches
+// the actual data on the physical demo tag (see nfcTag.js).
 export const mockProfile = {
-  name: "Amara Chukwu",
-  dob: "1994-03-12",
-  bloodType: "O−",
-  allergies: ["Penicillin", "Shellfish"],
-  conditions: ["Type 1 Diabetes"],
+  name: "Tunde Adegbola",
+  dob: "1988-04-12",
+  bloodType: "O+",
+  allergies: ["Penicillin", "Latex"],
+  conditions: ["Type 2 Diabetes", "Severe Asthma"],
+  medications: ["Metformin", "Albuterol Inhaler"],
   emergencyContact: {
-    name: "Uche Chukwu",
-    relationship: "Sibling",
-    phone: "+234 802 555 0142",
+    relationship: "Wife",
+    phone: "+2348030001122",
   },
   tag: {
     status: "Active",
-    id: "AGN-4471-KX",
+    id: "NEXUS-001",
     lastSynced: "2 hours ago",
     pendingSync: false,
   },

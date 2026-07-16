@@ -40,7 +40,7 @@ export default function ConsumerDashboardLayout() {
 
         <div className="px-3 pb-6">
           <Link
-            to="/login"
+            to="/"
             className="flex min-h-[44px] items-center gap-3 rounded-sm px-3 text-[15px] font-medium text-slate hover:bg-mist/60 hover:text-ink"
           >
             <LogOut size={18} strokeWidth={1.5} />

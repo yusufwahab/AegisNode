@@ -42,7 +42,7 @@ export default function HospitalDashboardLayout() {
 
         <div className="px-3 pb-6">
           <Link
-            to="/login"
+            to="/"
             className="flex min-h-[44px] items-center gap-3 rounded-sm px-3 text-[14px] font-medium text-paper/60 hover:bg-paper/5 hover:text-paper"
           >
             <LogOut size={17} strokeWidth={1.5} />

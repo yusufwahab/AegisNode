@@ -75,13 +75,13 @@ export default function Navbar({ transparentOnTop = true }) {
 
         <div className="hidden items-center gap-3 md:flex">
           <Link
-            to="/login"
+            to="/dashboard"
             className={clsx(
               "text-sm font-medium transition-colors duration-300",
               solid ? "text-ink/80 hover:text-teal" : "text-paper/80 hover:text-paper"
             )}
           >
-            Log In
+            Dashboard
           </Link>
           <Button as={Link} to="/order" variant="primary" size="sm">
             Get Your Tag
@@ -131,7 +131,7 @@ export default function Navbar({ transparentOnTop = true }) {
               animate="show"
               variants={{ show: { transition: { staggerChildren: 0.08 } } }}
             >
-              {[...LINKS, { to: "/login", label: "Log In" }].map((link) => (
+              {[...LINKS, { to: "/dashboard", label: "Dashboard" }].map((link) => (
                 <motion.li
                   key={link.to}
                   variants={{

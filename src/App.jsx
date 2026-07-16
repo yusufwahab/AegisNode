@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { ToastProvider } from "./components/ui/Toast";
 import PublicLayout from "./components/layout/PublicLayout";
-import AuthLayout from "./components/layout/AuthLayout";
+// import AuthLayout from "./components/layout/AuthLayout"; // auth disabled for now — see routes below
 import ConsumerDashboardLayout from "./components/layout/ConsumerDashboardLayout";
 import HospitalDashboardLayout from "./components/layout/HospitalDashboardLayout";
 
@@ -10,8 +10,8 @@ import HowItWorks from "./pages/HowItWorks";
 import Hospitals from "./pages/Hospitals";
 import Order from "./pages/Order";
 import About from "./pages/About";
-import Signup from "./pages/Signup";
-import Login from "./pages/Login";
+// import Signup from "./pages/Signup"; // auth disabled for now — see routes below
+// import Login from "./pages/Login"; // auth disabled for now — see routes below
 import Onboarding from "./pages/Onboarding";
 import ScanDemo from "./pages/ScanDemo";
 import NotFound from "./pages/NotFound";
@@ -40,10 +40,12 @@ export default function App() {
           <Route path="/scan-demo" element={<ScanDemo />} />
         </Route>
 
-        <Route element={<AuthLayout />}>
+        {/* Auth disabled for now — app runs as a hardcoded session user (see mockProfile
+            in lib/mockData.js). Uncomment to restore login/signup. */}
+        {/* <Route element={<AuthLayout />}>
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-        </Route>
+        </Route> */}
 
         <Route path="/onboarding" element={<Onboarding />} />
 

@@ -24,8 +24,8 @@ const COLUMNS = [
   {
     title: "Resources",
     links: [
-      { label: "Sign Up", to: "/signup" },
-      { label: "Log In", to: "/login" },
+      { label: "Dashboard", to: "/dashboard" },
+      { label: "Hospital Console", to: "/hospital-dashboard" },
     ],
   },
   {

@@ -9,7 +9,7 @@ import EmergencyCard from "../components/EmergencyCard";
 import { Reveal } from "../components/ui/Reveal";
 import { scanResult } from "../lib/mockData";
 import { isWebNfcSupported, readNfcTagOnce, parseTagPayload, parseTagParams } from "../lib/nfcTag";
-import { postScan } from "../lib/api";
+import { postScan, notifyHospital } from "../lib/api";
 
 export default function ScanDemo() {
   const [searchParams] = useSearchParams();
@@ -29,6 +29,21 @@ export default function ScanDemo() {
   // idle | syncing | synced | error — only ever set for real scans (URL-tap
   // or Web NFC). The simulated demo never touches the backend.
   const [syncStatus, setSyncStatus] = useState(cameFromTagUrl ? "syncing" : "idle");
+
+  // Real scans only — gates the "Notify Hospital" button so the simulated
+  // demo never sends actual emails to real people.
+  const [isRealScan, setIsRealScan] = useState(cameFromTagUrl);
+  const [notifyStatus, setNotifyStatus] = useState("idle"); // idle | sending | sent | error
+
+  async function handleNotify() {
+    setNotifyStatus("sending");
+    try {
+      await notifyHospital(profile);
+      setNotifyStatus("sent");
+    } catch {
+      setNotifyStatus("error");
+    }
+  }
 
   async function logRealScan(scannedProfile) {
     setSyncStatus("syncing");
@@ -58,18 +73,22 @@ export default function ScanDemo() {
   function startSimulated() {
     setNfcError("");
     setSyncStatus("idle");
+    setNotifyStatus("idle");
+    setIsRealScan(false);
     setProfile(scanResult);
     setStage("playing");
   }
 
   async function startRealScan() {
     setNfcError("");
+    setNotifyStatus("idle");
     setStage("waiting");
     abortRef.current = new AbortController();
     try {
       const raw = await readNfcTagOnce({ signal: abortRef.current.signal });
       const parsed = parseTagPayload(raw);
       setProfile(parsed);
+      setIsRealScan(true);
       setStage("result");
       logRealScan(parsed);
     } catch (err) {
@@ -204,7 +223,29 @@ export default function ScanDemo() {
                 </p>
               )}
 
-              <Button variant="ghost-ink" className="mt-6 w-full" onClick={() => setStage("idle")}>
+              {isRealScan && (
+                <>
+                  <Button
+                    variant="primary"
+                    className="mt-6 w-full"
+                    onClick={handleNotify}
+                    disabled={notifyStatus === "sending"}
+                  >
+                    {notifyStatus === "sending" && "Sending…"}
+                    {notifyStatus === "sent" && "Notified ✓"}
+                    {(notifyStatus === "idle" || notifyStatus === "error") &&
+                      "Notify Hospital & Emergency Contact"}
+                  </Button>
+                  {notifyStatus === "error" && (
+                    <p className="mt-2 flex items-center justify-center gap-1.5 text-sm text-coral">
+                      <AlertCircle size={14} strokeWidth={1.5} />
+                      Couldn't send the notification — check the email service is configured.
+                    </p>
+                  )}
+                </>
+              )}
+
+              <Button variant="ghost-ink" className="mt-3 w-full" onClick={() => setStage("idle")}>
                 Reset Demo
               </Button>
             </motion.div>
