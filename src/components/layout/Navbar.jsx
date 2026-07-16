@@ -21,6 +21,7 @@ const DASHBOARD_MOBILE_LINKS = [
   { to: "/dashboard", label: "Overview" },
   { to: "/dashboard/tag", label: "My Tag" },
   { to: "/onboarding", label: "Medical Profile" },
+  { to: "/dashboard/vitals", label: "Vitals" },
   { to: "/dashboard/settings", label: "Settings" },
 ];
 

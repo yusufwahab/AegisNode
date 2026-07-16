@@ -1,5 +1,5 @@
 import { NavLink, Outlet, Link } from "react-router-dom";
-import { LayoutGrid, Tag, HeartPulse, Settings, LogOut } from "lucide-react";
+import { LayoutGrid, Tag, HeartPulse, Activity, Settings, LogOut } from "lucide-react";
 import clsx from "clsx";
 import NfcMark from "../ui/NfcMark";
 
@@ -7,6 +7,7 @@ const NAV = [
   { to: "/dashboard", label: "Overview", icon: LayoutGrid, end: true },
   { to: "/dashboard/tag", label: "My Tag", icon: Tag },
   { to: "/onboarding", label: "Medical Profile", icon: HeartPulse },
+  { to: "/dashboard/vitals", label: "Vitals", icon: Activity },
   { to: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 

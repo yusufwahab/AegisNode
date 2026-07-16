@@ -18,6 +18,7 @@ import NotFound from "./pages/NotFound";
 
 import Overview from "./pages/dashboard/Overview";
 import TagPage from "./pages/dashboard/Tag";
+import Vitals from "./pages/dashboard/Vitals";
 import Settings from "./pages/dashboard/Settings";
 
 import IncomingAlerts from "./pages/hospital/IncomingAlerts";
@@ -52,6 +53,7 @@ export default function App() {
         <Route element={<ConsumerDashboardLayout />}>
           <Route path="/dashboard" element={<Overview />} />
           <Route path="/dashboard/tag" element={<TagPage />} />
+          <Route path="/dashboard/vitals" element={<Vitals />} />
           <Route path="/dashboard/settings" element={<Settings />} />
         </Route>
 
