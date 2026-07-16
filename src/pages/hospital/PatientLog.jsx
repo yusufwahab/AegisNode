@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+import { Download } from "lucide-react";
 import Badge from "../../components/ui/Badge";
+import Button from "../../components/ui/Button";
 import Skeleton from "../../components/ui/Skeleton";
 import { fetchAlerts, subscribeToAlerts } from "../../lib/alerts";
+import { buildAlertsCsv, downloadCsv } from "../../lib/csv";
 
 const STATUS_TONE = {
   Incoming: "coral",
@@ -34,10 +37,22 @@ export default function PatientLog() {
     return unsubscribe;
   }, []);
 
+  function handleExport() {
+    downloadCsv("aegis-node-patient-log.csv", buildAlertsCsv(alerts));
+  }
+
   return (
     <div>
-      <h1 className="text-2xl text-ink">Patient Log</h1>
-      <p className="mt-1 text-sm text-slate">All scans received, most recent first.</p>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl text-ink">Patient Log</h1>
+          <p className="mt-1 text-sm text-slate">All scans received, most recent first.</p>
+        </div>
+        <Button variant="ghost-ink" size="sm" onClick={handleExport}>
+          <Download size={15} strokeWidth={1.5} />
+          Export to CSV
+        </Button>
+      </div>
 
       {loading ? (
         <div className="mt-8 flex flex-col gap-3">

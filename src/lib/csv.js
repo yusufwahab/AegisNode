@@ -57,6 +57,43 @@ export function buildDatabaseCsv(mockRows, currentProfile, currentScannedAt) {
   return [toCsvRow(HEADER), ...mockLines, currentLine].join("\r\n");
 }
 
+const ALERTS_HEADER = [
+  "Patient ID",
+  "Name",
+  "Blood Type",
+  "Allergies",
+  "Conditions",
+  "Medications",
+  "Emergency Contact",
+  "Status",
+];
+
+/**
+ * General-purpose export for the hospital dashboard's alert list (Incoming
+ * Alerts / Patient Log) — the full current list, no "current scan" marker
+ * since there isn't a single scan in focus here.
+ */
+export function buildAlertsCsv(alerts) {
+  const rows = alerts.map((alert) => {
+    const contact = [alert.emergencyContact?.relationship, alert.emergencyContact?.phone]
+      .filter(Boolean)
+      .join(" - ");
+
+    return toCsvRow([
+      alert.patientId || alert.id || "",
+      alert.name || "",
+      alert.bloodType || "",
+      alert.allergies?.length ? alert.allergies.join("; ") : "None known",
+      alert.conditions?.length ? alert.conditions.join("; ") : "None known",
+      alert.medications?.length ? alert.medications.join("; ") : "None known",
+      contact || "Not provided",
+      alert.status || "",
+    ]);
+  });
+
+  return [toCsvRow(ALERTS_HEADER), ...rows].join("\r\n");
+}
+
 export function downloadCsv(filename, csvContent) {
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);

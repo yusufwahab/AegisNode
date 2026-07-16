@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bell } from "lucide-react";
+import { Bell, Download } from "lucide-react";
 import Badge from "../../components/ui/Badge";
 import Button from "../../components/ui/Button";
 import Drawer from "../../components/ui/Drawer";
@@ -10,6 +10,7 @@ import { newAlertPool } from "../../lib/mockData";
 import { fetchAlerts, subscribeToAlerts } from "../../lib/alerts";
 import { updateAlertStatus } from "../../lib/api";
 import { isSupabaseConfigured } from "../../lib/supabaseClient";
+import { buildAlertsCsv, downloadCsv } from "../../lib/csv";
 
 const STATUS_TONE = {
   Incoming: "coral",
@@ -108,6 +109,10 @@ export default function IncomingAlerts() {
     flashNew(id);
   }
 
+  function handleExport() {
+    downloadCsv("aegis-node-incoming-alerts.csv", buildAlertsCsv(alerts));
+  }
+
   async function markArrived(alert) {
     setAlerts((prev) => prev.map((a) => (a.id === alert.id ? { ...a, status: "Arrived" } : a)));
     setSelected((s) => (s ? { ...s, status: "Arrived" } : s));
@@ -127,10 +132,16 @@ export default function IncomingAlerts() {
           <h1 className="text-2xl text-ink">Incoming Alerts</h1>
           <p className="mt-1 text-sm text-slate">Newest scans appear at the top.</p>
         </div>
-        <Button variant="secondary" size="sm" onClick={simulateNewAlert}>
-          <Bell size={15} strokeWidth={1.5} />
-          Simulate New Alert
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="ghost-ink" size="sm" onClick={handleExport}>
+            <Download size={15} strokeWidth={1.5} />
+            Export to CSV
+          </Button>
+          <Button variant="secondary" size="sm" onClick={simulateNewAlert}>
+            <Bell size={15} strokeWidth={1.5} />
+            Simulate New Alert
+          </Button>
+        </div>
       </div>
 
       <div className="mt-8 flex flex-col gap-3">
