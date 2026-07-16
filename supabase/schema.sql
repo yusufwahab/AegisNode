@@ -1,5 +1,5 @@
 -- Aegis Node — scan → hospital alert pipeline
--- Run this in the Supabase SQL editor once the project exists.
+-- Run this in the Supabase SQL editor once the project existsss.
 
 create extension if not exists pgcrypto;
 
