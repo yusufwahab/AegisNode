@@ -64,7 +64,7 @@ export default function Order() {
 
         <Reveal delay={0.1}>
           <p className="text-sm font-medium uppercase tracking-wider text-teal">Aegis Node Tag</p>
-          <h1 className="mt-2 text-4xl text-ink md:text-5xl">₦18,000</h1>
+          <h1 className="mt-2 text-4xl text-ink md:text-5xl">₦350</h1>
 
           <ul className="mt-8 space-y-3">
             {FEATURES.map((feature) => (
