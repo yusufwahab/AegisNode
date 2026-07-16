@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import clsx from "clsx";
@@ -13,9 +13,23 @@ const LINKS = [
   { to: "/about", label: "About" },
 ];
 
+// On /scan-demo the mobile menu shows Tunde's dashboard sections instead of
+// marketing links — the page after a real tag scan is meant to feel like
+// you've landed inside the (hardcoded, no-auth-for-now) patient account, not
+// on a marketing page. Desktop nav is unaffected.
+const DASHBOARD_MOBILE_LINKS = [
+  { to: "/dashboard", label: "Overview" },
+  { to: "/dashboard/tag", label: "My Tag" },
+  { to: "/onboarding", label: "Medical Profile" },
+  { to: "/dashboard/settings", label: "Settings" },
+];
+
 export default function Navbar({ transparentOnTop = true }) {
   const [scrolled, setScrolled] = useState(!transparentOnTop);
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+  const isScanDemo = location.pathname === "/scan-demo";
+  const mobileLinks = isScanDemo ? DASHBOARD_MOBILE_LINKS : [...LINKS, { to: "/dashboard", label: "Dashboard" }];
 
   useEffect(() => {
     if (!transparentOnTop) return;
@@ -131,7 +145,7 @@ export default function Navbar({ transparentOnTop = true }) {
               animate="show"
               variants={{ show: { transition: { staggerChildren: 0.08 } } }}
             >
-              {[...LINKS, { to: "/dashboard", label: "Dashboard" }].map((link) => (
+              {mobileLinks.map((link) => (
                 <motion.li
                   key={link.to}
                   variants={{

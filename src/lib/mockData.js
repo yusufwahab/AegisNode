@@ -36,6 +36,61 @@ export const scanResult = {
   scannedOffline: true,
 };
 
+// Seed rows shown in the "Check Database" CSV export on the scan demo page —
+// rows 1-5 are fixed sample patients; the real scan is appended as row 6.
+export const mockDatabaseRows = [
+  {
+    id: "AGN-1002",
+    name: "Ngozi Umeh",
+    bloodType: "A+",
+    allergies: [],
+    conditions: ["Hypertension"],
+    medications: ["Lisinopril"],
+    emergencyContact: { relationship: "Husband", phone: "+234 803 214 5567" },
+    scannedAt: "Jul 14, 2026, 9:02 AM",
+  },
+  {
+    id: "AGN-1003",
+    name: "Chidi Obi",
+    bloodType: "B+",
+    allergies: ["Aspirin"],
+    conditions: [],
+    medications: [],
+    emergencyContact: { relationship: "Mother", phone: "+234 705 812 3390" },
+    scannedAt: "Jul 14, 2026, 2:47 PM",
+  },
+  {
+    id: "AGN-1004",
+    name: "Halima Yusuf",
+    bloodType: "O−",
+    allergies: ["Latex"],
+    conditions: ["Asthma"],
+    medications: ["Albuterol Inhaler"],
+    emergencyContact: { relationship: "Sister", phone: "+234 812 447 7781" },
+    scannedAt: "Jul 15, 2026, 11:20 AM",
+  },
+  {
+    id: "AGN-1005",
+    name: "Segun Adewale",
+    bloodType: "AB+",
+    allergies: [],
+    conditions: ["Epilepsy"],
+    medications: ["Phenytoin"],
+    emergencyContact: { relationship: "Wife", phone: "+234 701 998 2214" },
+    scannedAt: "Jul 15, 2026, 6:35 PM",
+  },
+  {
+    id: "AGN-1006",
+    name: "Blessing Eze",
+    bloodType: "A−",
+    allergies: ["Penicillin"],
+    conditions: [],
+    medications: [],
+    emergencyContact: { relationship: "Brother", phone: "+234 909 660 1123" },
+    scannedAt: "Jul 16, 2026, 8:14 AM",
+  },
+];
+
 export const hospitalAlerts = [
   {
     id: "a1",

@@ -1,15 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { AlertCircle, CheckCircle2, Database } from "lucide-react";
 import clsx from "clsx";
 import Button from "../components/ui/Button";
 import NfcScanVisual from "../components/NfcScanVisual";
 import EmergencyCard from "../components/EmergencyCard";
 import { Reveal } from "../components/ui/Reveal";
-import { scanResult } from "../lib/mockData";
+import { scanResult, mockDatabaseRows } from "../lib/mockData";
 import { isWebNfcSupported, readNfcTagOnce, parseTagPayload, parseTagParams } from "../lib/nfcTag";
 import { postScan, notifyHospital } from "../lib/api";
+import { buildDatabaseCsv, downloadCsv } from "../lib/csv";
+
+function formatScanTimestamp(date = new Date()) {
+  return date.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
 
 export default function ScanDemo() {
   const [searchParams] = useSearchParams();
@@ -34,6 +45,12 @@ export default function ScanDemo() {
   // demo never sends actual emails to real people.
   const [isRealScan, setIsRealScan] = useState(cameFromTagUrl);
   const [notifyStatus, setNotifyStatus] = useState("idle"); // idle | sending | sent | error
+  const [scannedAt] = useState(() => formatScanTimestamp());
+
+  function handleCheckDatabase() {
+    const csv = buildDatabaseCsv(mockDatabaseRows, profile, scannedAt);
+    downloadCsv(`aegis-node-database-${profile.id || "scan"}.csv`, csv);
+  }
 
   async function handleNotify() {
     setNotifyStatus("sending");
@@ -216,11 +233,18 @@ export default function ScanDemo() {
                   {syncStatus === "synced" && (
                     <>
                       <CheckCircle2 size={14} strokeWidth={1.5} className="text-teal" />
-                      Hospital dashboard notified
+                      This profile has been added to the hospital database
                     </>
                   )}
                   {syncStatus === "error" && "Hospital sync isn't connected yet — tag data still shown above."}
                 </p>
+              )}
+
+              {syncStatus === "synced" && (
+                <Button variant="secondary" className="mt-3 w-full" onClick={handleCheckDatabase}>
+                  <Database size={16} strokeWidth={1.5} />
+                  Check Database
+                </Button>
               )}
 
               {isRealScan && (
