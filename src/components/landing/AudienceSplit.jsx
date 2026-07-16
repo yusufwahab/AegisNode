@@ -36,7 +36,7 @@ export default function AudienceSplit() {
           <Reveal key={panel.title} delay={i * 0.1} className="group">
             <div className="overflow-hidden rounded-lg">
               <motion.div whileHover={{ scale: 1.03 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}>
-                <UnsplashImage query={panel.query} className="aspect-[4/3] w-full" alt={panel.title} />
+                <UnsplashImage query={panel.query} className="aspect-4/3 w-full" alt={panel.title} />
               </motion.div>
             </div>
             <h3 className="mt-6 text-2xl text-ink">{panel.title}</h3>

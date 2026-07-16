@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bell } from "lucide-react";
 import Badge from "../../components/ui/Badge";
 import Button from "../../components/ui/Button";
 import Drawer from "../../components/ui/Drawer";
-import { hospitalAlerts, newAlertPool } from "../../lib/mockData";
+import Skeleton from "../../components/ui/Skeleton";
+import EmergencyCard from "../../components/EmergencyCard";
+import { newAlertPool } from "../../lib/mockData";
+import { fetchAlerts, subscribeToAlerts } from "../../lib/alerts";
+import { updateAlertStatus } from "../../lib/api";
+import { isSupabaseConfigured } from "../../lib/supabaseClient";
 
 const STATUS_TONE = {
   Incoming: "coral",
@@ -31,32 +36,35 @@ function AlertCard({ alert, onClick, isNew }) {
         <p className="text-[15px] font-medium text-ink">{alert.name}</p>
         <p className="mt-0.5 text-xs text-slate">{alert.patientId}</p>
         <div className="mt-2 flex flex-wrap gap-1.5">
-          {alert.allergies.map((a) => (
-            <Badge key={a} tone="outline">{a}</Badge>
-          ))}
+          {alert.allergies?.length ? (
+            alert.allergies.map((a) => (
+              <Badge key={a} tone="outline">
+                {a}
+              </Badge>
+            ))
+          ) : (
+            <Badge tone="outline">None known</Badge>
+          )}
         </div>
       </div>
       <div className="flex flex-col items-end gap-2">
-        <Badge tone="teal">{alert.bloodType}</Badge>
+        <Badge tone="teal">{alert.bloodType || "—"}</Badge>
         <Badge tone={STATUS_TONE[alert.status]}>{alert.status}</Badge>
-        <span className="text-xs text-slate">ETA {alert.eta}</span>
+        <span className="text-xs text-slate">ETA {alert.eta || "—"}</span>
       </div>
     </motion.button>
   );
 }
 
 export default function IncomingAlerts() {
-  const [alerts, setAlerts] = useState(hospitalAlerts);
+  const [alerts, setAlerts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [newIds, setNewIds] = useState(new Set());
   const [selected, setSelected] = useState(null);
   const [poolIndex, setPoolIndex] = useState(0);
 
-  function simulateNewAlert() {
-    const template = newAlertPool[poolIndex % newAlertPool.length];
-    const id = `sim-${Date.now()}`;
-    setAlerts((prev) => [{ ...template, id }, ...prev]);
+  function flashNew(id) {
     setNewIds((prev) => new Set(prev).add(id));
-    setPoolIndex((i) => i + 1);
     setTimeout(() => {
       setNewIds((prev) => {
         const next = new Set(prev);
@@ -66,9 +74,50 @@ export default function IncomingAlerts() {
     }, 1500);
   }
 
-  function markArrived(id) {
-    setAlerts((prev) => prev.map((a) => (a.id === id ? { ...a, status: "Arrived", eta: "Arrived" } : a)));
-    setSelected((s) => (s ? { ...s, status: "Arrived", eta: "Arrived" } : s));
+  useEffect(() => {
+    let cancelled = false;
+    fetchAlerts().then((data) => {
+      if (!cancelled) {
+        setAlerts(data);
+        setLoading(false);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToAlerts({
+      onInsert: (alert) => {
+        setAlerts((prev) => [alert, ...prev]);
+        flashNew(alert.id);
+      },
+      onUpdate: (alert) => {
+        setAlerts((prev) => prev.map((a) => (a.id === alert.id ? alert : a)));
+      },
+    });
+    return unsubscribe;
+  }, []);
+
+  function simulateNewAlert() {
+    const template = newAlertPool[poolIndex % newAlertPool.length];
+    const id = `sim-${Date.now()}`;
+    setAlerts((prev) => [{ ...template, id, source: "mock" }, ...prev]);
+    setPoolIndex((i) => i + 1);
+    flashNew(id);
+  }
+
+  async function markArrived(alert) {
+    setAlerts((prev) => prev.map((a) => (a.id === alert.id ? { ...a, status: "Arrived" } : a)));
+    setSelected((s) => (s ? { ...s, status: "Arrived" } : s));
+
+    // Rows fetched/streamed from Supabase have a real uuid `id` — mock/simulated
+    // entries (from the demo button, or the pre-Supabase fallback list) don't
+    // exist server-side, so there's nothing to persist for those.
+    if (isSupabaseConfigured && alert.source !== "mock") {
+      updateAlertStatus(alert.id, "Arrived").catch(() => {});
+    }
   }
 
   return (
@@ -85,45 +134,35 @@ export default function IncomingAlerts() {
       </div>
 
       <div className="mt-8 flex flex-col gap-3">
-        <AnimatePresence initial={false}>
-          {alerts.map((alert) => (
-            <AlertCard
-              key={alert.id}
-              alert={alert}
-              isNew={newIds.has(alert.id)}
-              onClick={() => setSelected(alert)}
-            />
-          ))}
-        </AnimatePresence>
+        {loading ? (
+          <>
+            <Skeleton className="h-24" />
+            <Skeleton className="h-24" />
+            <Skeleton className="h-24" />
+          </>
+        ) : (
+          <AnimatePresence initial={false}>
+            {alerts.map((alert) => (
+              <AlertCard
+                key={alert.id}
+                alert={alert}
+                isNew={newIds.has(alert.id)}
+                onClick={() => setSelected(alert)}
+              />
+            ))}
+          </AnimatePresence>
+        )}
       </div>
 
-      <Drawer open={Boolean(selected)} onClose={() => setSelected(null)} title={selected?.name}>
+      <Drawer open={Boolean(selected)} onClose={() => setSelected(null)}>
         {selected && (
           <div className="flex flex-col gap-6">
-            <div>
-              <p className="text-xs uppercase tracking-wider text-slate">Patient ID</p>
-              <p className="mt-1 text-[15px] text-ink">{selected.patientId}</p>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-wider text-slate">Blood Type</p>
-              <p className="mt-1 font-display text-3xl text-teal">{selected.bloodType}</p>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-wider text-slate">Allergies</p>
-              <div className="mt-2 flex flex-wrap gap-1.5">
-                {selected.allergies.map((a) => (
-                  <Badge key={a} tone="outline">{a}</Badge>
-                ))}
-              </div>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-wider text-slate">Status</p>
-              <div className="mt-1">
-                <Badge tone={STATUS_TONE[selected.status]}>{selected.status}</Badge>
-              </div>
-            </div>
+            <EmergencyCard
+              profile={{ ...selected, id: selected.patientId || selected.id }}
+              variant="preview"
+            />
             {selected.status !== "Arrived" && (
-              <Button variant="primary" onClick={() => markArrived(selected.id)}>
+              <Button variant="primary" onClick={() => markArrived(selected)}>
                 Mark as Arrived
               </Button>
             )}

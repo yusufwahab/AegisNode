@@ -46,7 +46,7 @@ function StepBlock({ step, index, setActive }) {
   return (
     <div ref={ref} className="grid grid-cols-1 items-center gap-10 py-20 md:py-32 lg:grid-cols-2 lg:gap-16">
       <Reveal>
-        <UnsplashImage query={step.query} className="aspect-[4/3] w-full rounded-lg" alt={step.title} />
+        <UnsplashImage query={step.query} className="aspect-4/3 w-full rounded-lg" alt={step.title} />
       </Reveal>
       <Reveal delay={0.1}>
         <span className="text-sm font-medium text-teal">Step {index + 1}</span>

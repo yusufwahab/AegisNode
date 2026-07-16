@@ -20,13 +20,14 @@ export const mockProfile = {
 export const bloodTypes = ["O+", "O−", "A+", "A−", "B+", "B−", "AB+", "AB−"];
 
 export const scanResult = {
+  id: "AGN-4471-KX",
   name: "Amara Chukwu",
-  age: 31,
+  dob: "1994-03-12",
   bloodType: "O−",
   allergies: ["Penicillin", "Shellfish"],
   conditions: ["Type 1 Diabetes"],
+  medications: ["Insulin"],
   emergencyContact: {
-    name: "Uche Chukwu",
     relationship: "Sibling",
     phone: "+234 802 555 0142",
   },

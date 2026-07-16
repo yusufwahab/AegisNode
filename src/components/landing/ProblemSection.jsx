@@ -25,7 +25,7 @@ export default function ProblemSection() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={viewportOnce}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="aspect-[4/3] overflow-hidden rounded-lg"
+          className="aspect-4/3 overflow-hidden rounded-lg"
         >
           <UnsplashImage
             query="ambulance accident response"

@@ -81,7 +81,7 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="relative mx-auto aspect-[4/5] w-full max-w-sm"
+          className="relative mx-auto aspect-4/5 w-full max-w-sm"
         >
           <NfcScanVisual loop showCaptureCard className="h-full w-full" />
         </motion.div>
