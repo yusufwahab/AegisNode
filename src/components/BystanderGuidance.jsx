@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Volume2, VolumeX, MessageCircleWarning, AlertTriangle } from "lucide-react";
+import { Volume2, VolumeX, Loader2, MessageCircleWarning, AlertTriangle } from "lucide-react";
 
 function buildRecommendation(profile) {
   const sentences = [];
@@ -30,8 +30,10 @@ function buildRecommendation(profile) {
   return sentences.join(" ");
 }
 
-// Voice lists load asynchronously and can be empty on the very first call —
-// waiting for the list (or the voiceschanged event) avoids a silent no-op.
+// Voice lists load asynchronously and are commonly empty for about a second
+// after a fresh page load — waiting for the list (or the voiceschanged
+// event) avoids a silent no-op; the UI shows a loading state during this,
+// not an error, since resolving successfully is the normal outcome.
 function getVoicesReady() {
   return new Promise((resolve) => {
     const existing = window.speechSynthesis.getVoices();
@@ -47,7 +49,7 @@ function getVoicesReady() {
       resolve(window.speechSynthesis.getVoices());
     };
     window.speechSynthesis.addEventListener("voiceschanged", finish);
-    setTimeout(finish, 1000);
+    setTimeout(finish, 1500);
   });
 }
 
@@ -83,21 +85,27 @@ const RESUME_KEEPALIVE_MS = 5000;
 export default function BystanderGuidance({ profile }) {
   const [message] = useState(() => buildRecommendation(profile));
   const [active, setActive] = useState(false);
+  const [preparing, setPreparing] = useState(false);
   const [noVoice, setNoVoice] = useState(false);
   const [supported] = useState(() => typeof window !== "undefined" && "speechSynthesis" in window);
   const activeRef = useRef(false);
   const timeoutRef = useRef(null);
   const keepAliveRef = useRef(null);
 
-  function loop() {
+  function loop(isFirstAttempt) {
+    if (isFirstAttempt) setPreparing(true);
     speakOnce(message, {
       onEnd: () => {
+        setPreparing(false);
         if (!activeRef.current) return;
         timeoutRef.current = setTimeout(() => {
-          if (activeRef.current) loop();
+          if (activeRef.current) loop(false);
         }, REPEAT_GAP_MS);
       },
-      onNoVoice: () => setNoVoice(true),
+      onNoVoice: () => {
+        setPreparing(false);
+        setNoVoice(true);
+      },
     });
   }
 
@@ -108,11 +116,12 @@ export default function BystanderGuidance({ profile }) {
       clearInterval(keepAliveRef.current);
       window.speechSynthesis.cancel();
       setActive(false);
+      setPreparing(false);
     } else {
       activeRef.current = true;
       setActive(true);
       setNoVoice(false);
-      loop();
+      loop(true);
       keepAliveRef.current = setInterval(() => {
         if (activeRef.current && window.speechSynthesis.speaking) {
           window.speechSynthesis.resume();
@@ -132,10 +141,17 @@ export default function BystanderGuidance({ profile }) {
           <button
             type="button"
             onClick={handleToggle}
-            className="flex min-h-9 items-center gap-1.5 rounded-full border border-teal/40 bg-paper px-3 text-xs font-medium text-teal hover:bg-teal-light"
+            disabled={preparing}
+            className="flex min-h-9 items-center gap-1.5 rounded-full border border-teal/40 bg-paper px-3 text-xs font-medium text-teal hover:bg-teal-light disabled:opacity-70"
           >
-            {active ? <VolumeX size={14} strokeWidth={1.5} /> : <Volume2 size={14} strokeWidth={1.5} />}
-            {active ? "Stop" : "Play"}
+            {preparing ? (
+              <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />
+            ) : active ? (
+              <VolumeX size={14} strokeWidth={1.5} />
+            ) : (
+              <Volume2 size={14} strokeWidth={1.5} />
+            )}
+            {preparing ? "Loading…" : active ? "Stop" : "Play"}
           </button>
         )}
       </div>
@@ -145,7 +161,7 @@ export default function BystanderGuidance({ profile }) {
       {noVoice && (
         <p className="mt-3 flex items-center gap-1.5 text-sm text-coral">
           <AlertTriangle size={14} strokeWidth={1.5} />
-          No voice found on this device yet — text is shown above; try Play again in a moment.
+          No voice found on this device — text is shown above.
         </p>
       )}
       {!supported && (
