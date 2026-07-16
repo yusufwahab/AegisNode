@@ -6,6 +6,7 @@ import clsx from "clsx";
 import Button from "../components/ui/Button";
 import NfcScanVisual from "../components/NfcScanVisual";
 import EmergencyCard from "../components/EmergencyCard";
+import VitalsMonitor from "../components/VitalsMonitor";
 import { Reveal } from "../components/ui/Reveal";
 import { scanResult, mockDatabaseRows } from "../lib/mockData";
 import { isWebNfcSupported, readNfcTagOnce, parseTagPayload, parseTagParams } from "../lib/nfcTag";
@@ -221,6 +222,8 @@ export default function ScanDemo() {
               className="text-left"
             >
               <EmergencyCard profile={profile} variant="scan" />
+
+              <VitalsMonitor />
 
               {syncStatus !== "idle" && (
                 <p
