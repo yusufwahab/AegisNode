@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { HeartPulse, ArrowUp, ArrowDown, Minus, ClipboardList, Utensils, TrendingUp } from "lucide-react";
+import { HeartPulse, ArrowUp, ArrowDown, Minus, ClipboardList, Utensils, TrendingUp, Volume2, VolumeX } from "lucide-react";
 import clsx from "clsx";
 import EmergencyCard from "../../components/EmergencyCard";
 import Skeleton from "../../components/ui/Skeleton";
@@ -20,12 +20,27 @@ function TrendArrow({ direction }) {
 
 export default function Overview() {
   const [loading, setLoading] = useState(true);
+  const [playing, setPlaying] = useState(false);
+  const audioRef = useRef(null);
   const navigate = useNavigate();
   const vitals = useVitalsStore();
   const insights = useHealthStore((s) => s.insights);
   const logs = useHealthStore((s) => s.logs);
   const latestLog = logs[logs.length - 1];
   const latestInsight = [...insights].sort((a, b) => (a.date < b.date ? 1 : -1))[0];
+
+  function toggleAudio() {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (playing) {
+      audio.pause();
+      audio.currentTime = 0;
+      setPlaying(false);
+    } else {
+      audio.play();
+      setPlaying(true);
+    }
+  }
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 700);
@@ -38,6 +53,8 @@ export default function Overview() {
 
   return (
     <div>
+      <audio ref={audioRef} src="/Yoruba_Helix.m4a" onEnded={() => setPlaying(false)} />
+
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -48,11 +65,22 @@ export default function Overview() {
           <h1 className="text-3xl text-ink">Good day, {mockProfile.name.split(" ")[0]}.</h1>
           <p className="mt-1 text-[15px] text-slate">Here's how your cardiovascular health looks today.</p>
         </div>
-        <button type="button" onClick={() => navigate("/dashboard/trends")}>
-          <Badge tone={riskCopy.tone} dot className="whitespace-nowrap">
-            {riskCopy.label}
-          </Badge>
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={toggleAudio}
+            title={playing ? "Stop audio" : "Play Yoruba intro"}
+            className="flex items-center gap-2 rounded-full border border-mist px-3 py-1.5 text-xs font-medium text-slate transition-colors hover:border-teal hover:text-teal"
+          >
+            {playing ? <VolumeX size={14} strokeWidth={1.5} /> : <Volume2 size={14} strokeWidth={1.5} />}
+            {playing ? "Stop" : "Play intro"}
+          </button>
+          <button type="button" onClick={() => navigate("/dashboard/trends")}>
+            <Badge tone={riskCopy.tone} dot className="whitespace-nowrap">
+              {riskCopy.label}
+            </Badge>
+          </button>
+        </div>
       </motion.div>
 
       <button type="button" onClick={() => navigate("/dashboard/trends")} className="mt-6 block w-full text-left">

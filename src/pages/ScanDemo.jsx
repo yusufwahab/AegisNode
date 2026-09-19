@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { AlertCircle, CheckCircle2, Database } from "lucide-react";
+import { AlertCircle, CheckCircle2, Database, Volume2, VolumeX } from "lucide-react";
 import clsx from "clsx";
 import Button from "../components/ui/Button";
 import NfcScanVisual from "../components/NfcScanVisual";
@@ -40,7 +40,9 @@ export default function ScanDemo() {
   const [profile, setProfile] = useState(cameFromTagUrl ? urlProfile : scanResult);
   const [nfcError, setNfcError] = useState("");
   const abortRef = useRef(null);
+  const audioRef = useRef(null);
   const [nfcSupported] = useState(isWebNfcSupported);
+  const [audioPlaying, setAudioPlaying] = useState(false);
 
   // idle | syncing | synced | error — only ever set for real scans (URL-tap
   // or Web NFC). The simulated demo never touches the backend.
@@ -225,6 +227,33 @@ export default function ScanDemo() {
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className="text-left"
             >
+              <audio
+                ref={audioRef}
+                src="/Scanned_Yoruba.m4a"
+                onEnded={() => setAudioPlaying(false)}
+              />
+
+              <button
+                type="button"
+                onClick={() => {
+                  const audio = audioRef.current;
+                  if (!audio) return;
+                  if (audioPlaying) {
+                    audio.pause();
+                    audio.currentTime = 0;
+                    setAudioPlaying(false);
+                  } else {
+                    audio.play();
+                    setAudioPlaying(true);
+                  }
+                }}
+                className="mb-4 flex w-full items-center justify-center gap-2 rounded-sm border border-mist py-2.5 text-sm font-medium text-slate transition-colors hover:border-teal hover:text-teal"
+              >
+                {audioPlaying
+                  ? <><VolumeX size={15} strokeWidth={1.5} /> Stop audio</>
+                  : <><Volume2 size={15} strokeWidth={1.5} /> Play Yoruba scan message</>}
+              </button>
+
               <EmergencyCard profile={profile} variant="scan" />
 
               <BystanderGuidance profile={profile} />
