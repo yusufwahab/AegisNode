@@ -4,7 +4,8 @@ import Button from "../ui/Button";
 import NfcScanVisual from "../NfcScanVisual";
 import { useReducedMotion } from "../../lib/motion";
 
-const HEADLINE_LINES = ["Your medical history.", "Ready before you arrive."];
+const HEADLINE = "Your Daily Health Guardian.";
+const SUBHEADLINE = "Your Emergency Lifeline.";
 
 const lineContainer = {
   hidden: {},
@@ -31,22 +32,21 @@ export default function Hero() {
 
       <div className="content-container relative grid grid-cols-1 items-center gap-16 lg:grid-cols-[55%_45%]">
         <div>
-          <h1 className="text-[40px] leading-[1.08] text-paper md:text-[72px]">
+          <h1 className="text-[40px] leading-[1.08] text-paper md:text-[68px]">
             {reduced ? (
               <>
-                {HEADLINE_LINES[0]}
+                {HEADLINE}
                 <br />
-                {HEADLINE_LINES[1]}
+                <span style={{ color: "var(--color-coral)" }}>{SUBHEADLINE}</span>
               </>
             ) : (
               <motion.span initial="hidden" animate="show" variants={lineContainer} className="block">
-                {HEADLINE_LINES.map((line) => (
-                  <span key={line} className="block overflow-hidden pb-1">
-                    <motion.span variants={wordVariant} className="block">
-                      {line}
-                    </motion.span>
-                  </span>
-                ))}
+                <span className="block overflow-hidden pb-1">
+                  <motion.span variants={wordVariant} className="block">{HEADLINE}</motion.span>
+                </span>
+                <span className="block overflow-hidden pb-1">
+                  <motion.span variants={wordVariant} className="block" style={{ color: "var(--color-coral)" }}>{SUBHEADLINE}</motion.span>
+                </span>
               </motion.span>
             )}
           </h1>
@@ -57,9 +57,9 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
             className="mt-6 max-w-md text-lg leading-relaxed text-mist/80"
           >
-            Helix is an offline-first NFC tag that puts your critical medical
-            profile in a responder's hands the moment they tap — then alerts the
-            hospital automatically once a connection returns.
+            Helix watches your heart health every day, warns you when something
+            is drifting, and puts your medical profile in a responder's hands
+            with one tap. Built for Nigeria.
           </motion.p>
 
           <motion.div
@@ -68,11 +68,11 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="mt-9 flex flex-col gap-3 sm:flex-row"
           >
-            <Button as={Link} to="/dashboard" variant="coral" size="lg">
-              View Live Demo →
+            <Button as={Link} to="/dashboard" variant="primary" size="lg">
+              View live demo →
             </Button>
             <Button as={Link} to="/order" variant="ghost" size="lg">
-              Order Your Tag
+              Join the waitlist
             </Button>
           </motion.div>
 
@@ -80,14 +80,14 @@ export default function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.85, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-4"
+            className="mt-6 flex items-center gap-3"
           >
-            <Link
-              to="/how-it-works"
-              className="text-sm text-mist/70 underline-offset-4 transition-colors hover:text-paper hover:underline"
-            >
-              See how it works →
-            </Link>
+            <span className="rounded-full bg-teal/20 px-3 py-1 text-xs font-medium text-teal">
+              Blood Type: O+
+            </span>
+            <span className="rounded-full bg-teal/20 px-3 py-1 text-xs font-medium text-teal">
+              Allergy: Penicillin
+            </span>
           </motion.div>
         </div>
 

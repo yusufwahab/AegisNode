@@ -7,10 +7,15 @@ import NfcMark from "../ui/NfcMark";
 import Button from "../ui/Button";
 
 const LINKS = [
-  { to: "/how-it-works", label: "How It Works" },
-  { to: "/hospitals", label: "For Hospitals" },
-  { to: "/order", label: "Pricing" },
+  { to: "/how-it-works", label: "How it works" },
+  { to: "/hospitals", label: "For responders" },
   { to: "/about", label: "About" },
+];
+
+const DEMO_LINKS = [
+  { to: "/dashboard", label: "Patient demo" },
+  { to: "/hospital-dashboard", label: "Responder demo" },
+  { to: "/scan-demo", label: "NFC scan demo" },
 ];
 
 // On /scan-demo the mobile menu shows Tunde's dashboard sections instead of
@@ -32,7 +37,7 @@ export default function Navbar({ transparentOnTop = true }) {
   const isScanDemo = location.pathname === "/scan-demo";
   const mobileLinks = isScanDemo
     ? DASHBOARD_MOBILE_LINKS
-    : [...LINKS, { to: "/dashboard", label: "Dashboard" }, { to: "/hospital-dashboard", label: "Medical Dashboard" }];
+    : [...LINKS, ...DEMO_LINKS];
 
   useEffect(() => {
     if (!transparentOnTop) return;
@@ -91,26 +96,32 @@ export default function Navbar({ transparentOnTop = true }) {
         </ul>
 
         <div className="hidden items-center gap-3 md:flex">
-          <Link
-            to="/dashboard"
-            className={clsx(
-              "text-sm font-medium transition-colors duration-300",
-              solid ? "text-ink/80 hover:text-teal" : "text-paper/80 hover:text-paper"
-            )}
-          >
-            Dashboard
-          </Link>
-          <Link
-            to="/hospital-dashboard"
-            className={clsx(
-              "text-sm font-medium transition-colors duration-300",
-              solid ? "text-ink/80 hover:text-teal" : "text-paper/80 hover:text-paper"
-            )}
-          >
-            Medical Dashboard
-          </Link>
+          <div className="relative group">
+            <button
+              type="button"
+              className={clsx(
+                "text-sm font-medium transition-colors duration-300",
+                solid ? "text-ink/80 hover:text-teal" : "text-paper/80 hover:text-paper"
+              )}
+            >
+              Demo ▾
+            </button>
+            <div className="absolute right-0 top-full hidden pt-2 group-hover:block">
+              <div className="rounded-lg border border-mist bg-paper py-1 shadow-lg">
+                {DEMO_LINKS.map((l) => (
+                  <Link
+                    key={l.to}
+                    to={l.to}
+                    className="block px-4 py-2 text-sm text-ink/80 hover:text-teal"
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
           <Button as={Link} to="/order" variant="primary" size="sm">
-            Get Your Tag
+            Join the waitlist
           </Button>
         </div>
 
@@ -182,7 +193,7 @@ export default function Navbar({ transparentOnTop = true }) {
                 className="pt-4"
               >
                 <Button as={Link} to="/order" onClick={() => setMenuOpen(false)} variant="primary" className="w-full">
-                  Get Your Tag
+                  Join the waitlist
                 </Button>
               </motion.li>
             </motion.ul>

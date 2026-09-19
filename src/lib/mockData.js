@@ -157,10 +157,10 @@ export const newAlertPool = [
 ];
 
 export const trustStats = [
-  { value: "< 2 sec", label: "Scan time" },
-  { value: "100%", label: "Offline capable" },
-  { value: "0", label: "Apps to install for patients" },
-  { value: "Auto", label: "Sync on reconnect" },
+  { value: "< 2 sec", label: "Tag scan time" },
+  { value: "Works", label: "Even with weak signal" },
+  { value: "0", label: "Apps to install for responders" },
+  { value: "Auto", label: "Contact alerts on emergency" },
 ];
 
 export const howItWorksSteps = [

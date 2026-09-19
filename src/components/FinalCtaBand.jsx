@@ -3,8 +3,8 @@ import Button from "./ui/Button";
 import { Reveal } from "./ui/Reveal";
 
 export default function FinalCtaBand({
-  headline = "Seconds matter. Be ready.",
-  ctaLabel = "Order Your Tag",
+  headline = "1% of Nigerian adults. 1.5 million people monitoring their heart health for the first time.",
+  ctaLabel = "Join the waitlist",
   ctaTo = "/order",
   onCtaClick,
 }) {

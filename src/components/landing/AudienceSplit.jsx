@@ -6,27 +6,29 @@ import { Reveal } from "../ui/Reveal";
 
 const PANELS = [
   {
-    title: "For Patients",
-    query: "person wearing wearable band daily life",
+    title: "For patients & families",
+    query: "nigerian family health wellness",
     copy: [
-      "Wear it like any band or tag — nothing to charge, nothing to unlock.",
-      "Update your profile any time; changes sync to the tag automatically.",
-      "Works with any NFC-enabled phone, no app required for responders.",
+      "Log vitals daily and track your own baseline over time.",
+      "Get plain-English insights — not medical jargon.",
+      "Your Helix Tag is passive: no charging, no unlocking, no app.",
+      "Update your profile any time; the tag reflects changes automatically.",
     ],
-    cta: "Get your tag →",
-    to: "/order",
+    cta: "View live demo →",
+    to: "/dashboard",
   },
   {
-    title: "For Responders",
+    title: "For responders",
     query: "paramedic emergency room hallway",
     copy: [
-      "Tap and read structured patient data in under two seconds.",
-      "No signal needed — the tag itself carries the critical fields.",
-      "Sync silently alerts the receiving hospital the moment you reconnect.",
+      "Tap any NFC-enabled phone against the tag — no app required.",
+      "Structured patient data in under two seconds, even with weak signal.",
+      "Blood type, allergies, conditions and tap-to-call contacts, front and centre.",
+      "Hospital sync available once a connection is restored (prototype demo).",
     ],
     cta: "See responder view →",
     to: "/scan-demo",
-    secondaryCta: "Medical Dashboard",
+    secondaryCta: "Medical Dashboard (demo)",
     secondaryTo: "/hospital-dashboard",
   },
 ];
