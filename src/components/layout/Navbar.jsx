@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -14,7 +14,7 @@ const LINKS = [
 
 const DEMO_LINKS = [
   { to: "/dashboard", label: "Patient demo" },
-  { to: "/hospital-dashboard", label: "Responder demo" },
+  { to: "/hospital-dashboard", label: "Hospital demo" },
   { to: "/scan-demo", label: "NFC scan demo" },
 ];
 
@@ -33,8 +33,23 @@ const DASHBOARD_MOBILE_LINKS = [
 export default function Navbar({ transparentOnTop = true }) {
   const [scrolled, setScrolled] = useState(!transparentOnTop);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [demoOpen, setDemoOpen] = useState(false);
+  const demoRef = useRef(null);
   const location = useLocation();
+
+  useEffect(() => {
+    if (!demoOpen) return;
+    function handleClick(e) {
+      if (demoRef.current && !demoRef.current.contains(e.target)) setDemoOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [demoOpen]);
   const isScanDemo = location.pathname === "/scan-demo";
+
+  useEffect(() => {
+    setDemoOpen(false);
+  }, [location.pathname]);
   const mobileLinks = isScanDemo
     ? DASHBOARD_MOBILE_LINKS
     : [...LINKS, ...DEMO_LINKS];
@@ -96,29 +111,39 @@ export default function Navbar({ transparentOnTop = true }) {
         </ul>
 
         <div className="hidden items-center gap-3 md:flex">
-          <div className="relative group">
+          <div className="relative" ref={demoRef}>
             <button
               type="button"
+              onClick={() => setDemoOpen((o) => !o)}
               className={clsx(
                 "text-sm font-medium transition-colors duration-300",
                 solid ? "text-ink/80 hover:text-teal" : "text-paper/80 hover:text-paper"
               )}
             >
-              Demo ▾
+              Demo {demoOpen ? "▴" : "▾"}
             </button>
-            <div className="absolute right-0 top-full hidden pt-2 group-hover:block">
-              <div className="rounded-lg border border-mist bg-paper py-1 shadow-lg">
-                {DEMO_LINKS.map((l) => (
-                  <Link
-                    key={l.to}
-                    to={l.to}
-                    className="block px-4 py-2 text-sm text-ink/80 hover:text-teal"
-                  >
-                    {l.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
+            <AnimatePresence>
+              {demoOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute right-0 top-full z-50 mt-2 min-w-[180px] rounded-lg border border-mist bg-paper py-1 shadow-lg"
+                >
+                  {DEMO_LINKS.map((l) => (
+                    <Link
+                      key={l.to}
+                      to={l.to}
+                      onClick={() => setDemoOpen(false)}
+                      className="block px-4 py-2.5 text-sm text-ink/80 hover:text-teal"
+                    >
+                      {l.label}
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
           <Button as={Link} to="/order" variant="primary" size="sm">
             Join the waitlist

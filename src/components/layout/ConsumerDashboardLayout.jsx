@@ -9,6 +9,8 @@ import {
   HeartPulse,
   Settings,
   LogOut,
+  Hospital,
+  Smartphone,
 } from "lucide-react";
 import clsx from "clsx";
 import NfcMark from "../ui/NfcMark";
@@ -40,10 +42,10 @@ const MOBILE_NAV = [
 export default function ConsumerDashboardLayout() {
   return (
     <div className="min-h-screen bg-paper md:flex">
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-mist bg-paper md:flex">
+      <aside className="hidden w-64 shrink-0 flex-col border-r border-mist bg-ink md:flex">
         <Link to="/" className="flex items-center gap-2 px-6 py-7">
-          <NfcMark className="h-6 w-6" color="#0E4F45" />
-          <span className="font-display text-lg text-ink">Helix</span>
+          <NfcMark className="h-6 w-6" color="#FAF9F6" />
+          <span className="font-display text-lg text-paper">Helix</span>
         </Link>
 
         <nav className="flex flex-1 flex-col gap-1 px-3">
@@ -55,7 +57,7 @@ export default function ConsumerDashboardLayout() {
               className={({ isActive }) =>
                 clsx(
                   "flex min-h-[44px] items-center gap-3 rounded-sm px-3 text-[15px] font-medium transition-colors",
-                  isActive ? "bg-teal-light text-teal" : "text-slate hover:bg-mist/60 hover:text-ink"
+                  isActive ? "bg-paper/10 text-paper" : "text-paper/60 hover:bg-paper/5 hover:text-paper"
                 )
               }
             >
@@ -65,10 +67,28 @@ export default function ConsumerDashboardLayout() {
           ))}
         </nav>
 
+        <div className="border-t border-paper/10 px-3 py-3">
+          <p className="mb-1 px-3 text-[11px] uppercase tracking-wider text-paper/30">Switch demo</p>
+          <Link
+            to="/hospital-dashboard"
+            className="flex min-h-[44px] items-center gap-3 rounded-sm px-3 text-[15px] font-medium text-paper/60 hover:bg-paper/5 hover:text-paper"
+          >
+            <Hospital size={18} strokeWidth={1.5} />
+            Hospital demo
+          </Link>
+          <Link
+            to="/scan-demo"
+            className="flex min-h-[44px] items-center gap-3 rounded-sm px-3 text-[15px] font-medium text-paper/60 hover:bg-paper/5 hover:text-paper"
+          >
+            <Smartphone size={18} strokeWidth={1.5} />
+            NFC scan demo
+          </Link>
+        </div>
+
         <div className="px-3 pb-6">
           <Link
             to="/"
-            className="flex min-h-[44px] items-center gap-3 rounded-sm px-3 text-[15px] font-medium text-slate hover:bg-mist/60 hover:text-ink"
+            className="flex min-h-[44px] items-center gap-3 rounded-sm px-3 text-[15px] font-medium text-paper/60 hover:bg-paper/5 hover:text-paper"
           >
             <LogOut size={18} strokeWidth={1.5} />
             Log Out

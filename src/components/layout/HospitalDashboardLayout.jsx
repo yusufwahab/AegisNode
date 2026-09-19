@@ -1,5 +1,5 @@
 import { NavLink, Outlet, Link } from "react-router-dom";
-import { Activity, Users, Settings, LogOut } from "lucide-react";
+import { Activity, Users, Settings, LogOut, User, Smartphone } from "lucide-react";
 import clsx from "clsx";
 import NfcMark from "../ui/NfcMark";
 
@@ -39,6 +39,24 @@ export default function HospitalDashboardLayout() {
             </NavLink>
           ))}
         </nav>
+
+        <div className="border-t border-paper/10 px-3 py-3">
+          <p className="mb-1 px-3 text-[11px] uppercase tracking-wider text-paper/30">Switch demo</p>
+          <Link
+            to="/dashboard"
+            className="flex min-h-[44px] items-center gap-3 rounded-sm px-3 text-[14px] font-medium text-paper/60 hover:bg-paper/5 hover:text-paper"
+          >
+            <User size={17} strokeWidth={1.5} />
+            Patient demo
+          </Link>
+          <Link
+            to="/scan-demo"
+            className="flex min-h-[44px] items-center gap-3 rounded-sm px-3 text-[14px] font-medium text-paper/60 hover:bg-paper/5 hover:text-paper"
+          >
+            <Smartphone size={17} strokeWidth={1.5} />
+            NFC scan demo
+          </Link>
+        </div>
 
         <div className="px-3 pb-6">
           <Link
