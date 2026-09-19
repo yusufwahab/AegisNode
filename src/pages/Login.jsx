@@ -53,7 +53,7 @@ export default function Login() {
       </form>
 
       <p className="mt-6 text-center text-sm text-slate">
-        New to Aegis Node?{" "}
+        New to Helix?{" "}
         <Link to="/signup" className="font-medium text-teal hover:underline">
           Create an account
         </Link>

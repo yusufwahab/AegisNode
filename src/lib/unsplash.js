@@ -23,7 +23,7 @@ const PLACEHOLDER_PAIRS = [
 ];
 
 export function placeholderGradient(query) {
-  const h = hashString(query || "aegis");
+  const h = hashString(query || "helix");
   const [a, b] = PLACEHOLDER_PAIRS[h % PLACEHOLDER_PAIRS.length];
   const angle = 115 + (h % 60);
   return `linear-gradient(${angle}deg, ${a} 0%, ${b} 100%)`;
@@ -52,7 +52,7 @@ async function fetchUnsplashPhoto(query, orientation) {
     src: photo.urls.regular,
     alt: photo.alt_description || query,
     photographer: photo.user.name,
-    photographerUrl: `${photo.user.links.html}?utm_source=aegis_node&utm_medium=referral`,
+    photographerUrl: `${photo.user.links.html}?utm_source=helix&utm_medium=referral`,
   };
   cache.set(cacheKey, result);
   return result;

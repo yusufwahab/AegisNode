@@ -1,5 +1,5 @@
 {
-  "name": "aegis-node",
+  "name": "helix",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -20,7 +20,9 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1",
-    "tailwindcss": "^4.3.2"
+    "recharts": "^3.10.1",
+    "tailwindcss": "^4.3.2",
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

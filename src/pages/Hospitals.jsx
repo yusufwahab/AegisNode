@@ -35,7 +35,7 @@ export default function Hospitals() {
             transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             className="mt-6 max-w-lg text-lg leading-relaxed text-mist/80"
           >
-            Aegis Node gives your triage team a structured alert — blood type,
+            Helix gives your triage team a structured alert — blood type,
             allergies, conditions — the moment a responder's scan syncs, often
             minutes before the patient arrives.
           </motion.p>

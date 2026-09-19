@@ -62,7 +62,7 @@ export default function Navbar({ transparentOnTop = true }) {
               solid ? "text-ink" : "text-paper"
             )}
           >
-            Aegis Node
+            Helix
           </span>
         </Link>
 
@@ -139,7 +139,7 @@ export default function Navbar({ transparentOnTop = true }) {
             <div className="content-container flex h-20 items-center justify-between">
               <Link to="/" onClick={() => setMenuOpen(false)} className="flex items-center gap-2">
                 <NfcMark className="h-6 w-6" color="#0E4F45" />
-                <span className="font-display text-lg text-ink">Aegis Node</span>
+                <span className="font-display text-lg text-ink">Helix</span>
               </Link>
               <button
                 type="button"

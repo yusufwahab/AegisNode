@@ -9,14 +9,14 @@ export default function About() {
         <Reveal>
           <p className="text-sm font-medium uppercase tracking-wider text-teal">Our Mission</p>
           <p className="mt-4 max-w-3xl font-display text-3xl italic leading-tight text-ink md:text-5xl">
-            "We built Aegis Node because the worst moment of someone's life
+            "We built Helix because the worst moment of someone's life
             shouldn't also be the moment their history goes silent."
           </p>
         </Reveal>
 
         <Reveal delay={0.1} className="mt-16 max-w-2xl space-y-6 text-[17px] leading-relaxed text-slate">
           <p>
-            Aegis Node started with a simple, uncomfortable observation: the
+            Helix started with a simple, uncomfortable observation: the
             people who most need their medical history known are often the
             ones least able to share it. Unconscious. Non-verbal. Alone at the
             scene. Responders do extraordinary work with almost no information

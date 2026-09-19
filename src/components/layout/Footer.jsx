@@ -80,7 +80,7 @@ export default function Footer() {
         <div className="flex items-center gap-2">
           <NfcMark className="h-5 w-5" color="#0E4F45" />
           <div>
-            <p className="font-display text-base text-ink">Aegis Node</p>
+            <p className="font-display text-base text-ink">Helix</p>
             <p className="text-xs text-slate">
               Your medical history, ready before you arrive.
             </p>
@@ -102,7 +102,7 @@ export default function Footer() {
 
       <div className="content-container border-t border-mist py-4">
         <p className="text-xs text-slate">
-          © {new Date().getFullYear()} Aegis Node. Photography via{" "}
+          © {new Date().getFullYear()} Helix. Photography via{" "}
           <a
             href="https://unsplash.com"
             target="_blank"

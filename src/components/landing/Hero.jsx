@@ -57,7 +57,7 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
             className="mt-6 max-w-md text-lg leading-relaxed text-mist/80"
           >
-            Aegis Node is an offline-first NFC tag that puts your critical medical
+            Helix is an offline-first NFC tag that puts your critical medical
             profile in a responder's hands the moment they tap — then alerts the
             hospital automatically once a connection returns.
           </motion.p>
@@ -68,12 +68,26 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="mt-9 flex flex-col gap-3 sm:flex-row"
           >
-            <Button as={Link} to="/order" variant="coral" size="lg">
-              Order Your Tag →
+            <Button as={Link} to="/dashboard" variant="coral" size="lg">
+              View Live Demo →
             </Button>
-            <Button as={Link} to="/how-it-works" variant="ghost" size="lg">
-              See How It Works
+            <Button as={Link} to="/order" variant="ghost" size="lg">
+              Order Your Tag
             </Button>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.85, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-4"
+          >
+            <Link
+              to="/how-it-works"
+              className="text-sm text-mist/70 underline-offset-4 transition-colors hover:text-paper hover:underline"
+            >
+              See how it works →
+            </Link>
           </motion.div>
         </div>
 

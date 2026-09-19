@@ -1,18 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { HeartPulse, ArrowUp, ArrowDown, Minus } from "lucide-react";
 import clsx from "clsx";
 import Badge from "./ui/Badge";
-
-function stepToward(value, [min, max], jitter) {
-  const target = min + Math.random() * (max - min);
-  const next = value + (target - value) * 0.35 + (Math.random() - 0.5) * jitter;
-  return next;
-}
-
-function clampRound(value, min, max) {
-  return Math.round(Math.min(max, Math.max(min, value)));
-}
+import { useVitalsStore } from "../store/useVitalsStore";
 
 // One beat unit spans 200 SVG units (baseline, small P-wave bump, sharp QRS
 // spike, small T-wave bump); the path holds two units back-to-back (0-400)
@@ -93,35 +84,22 @@ function useTrend(value) {
 
 /**
  * A simulated vitals readout — not connected to any real sensor (the tag has
- * none). Ticks on its own so it looks alive, plus a manual trigger so the
- * "elevated" moment happens on cue during a live demo rather than by chance.
- * Clearly labeled as a preview so it never implies it's reading anything real.
+ * none). Reads from the shared useVitalsStore (ticked globally by
+ * useVitalsTicker) so this widget, the Live Sensor page, and the Dashboard
+ * mini-widget all show the same live feed. The visible toggle here is a
+ * quick local preview; the "hidden" demo-orchestrated anomaly lives in
+ * Settings > Demo tools (see AnomalyModalHost).
  */
 export default function VitalsMonitor() {
-  const [heartRate, setHeartRate] = useState(76);
-  const [spo2, setSpo2] = useState(98);
-  const [systolic, setSystolic] = useState(118);
-  const [diastolic, setDiastolic] = useState(76);
-  const [respRate, setRespRate] = useState(15);
-  const [elevated, setElevated] = useState(false);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setHeartRate((hr) => clampRound(stepToward(hr, elevated ? [128, 148] : [68, 92], 3), 55, 160));
-      setSpo2((s) => clampRound(stepToward(s, elevated ? [90, 94] : [96, 99], 0.6), 85, 100));
-      setSystolic((sys) => clampRound(stepToward(sys, elevated ? [145, 165] : [110, 124], 2), 90, 180));
-      setDiastolic((dia) => clampRound(stepToward(dia, elevated ? [92, 102] : [70, 80], 1.5), 55, 115));
-      setRespRate((rr) => clampRound(stepToward(rr, elevated ? [24, 30] : [13, 17], 0.8), 8, 35));
-    }, 2000);
-    return () => clearInterval(interval);
-  }, [elevated]);
+  const { heartRate, hrv, spo2, systolic, diastolic, respRate, elevated, toggleElevated } = useVitalsStore();
 
   const heartRateTrend = useTrend(heartRate);
+  const hrvTrend = useTrend(hrv);
   const spo2Trend = useTrend(spo2);
   const systolicTrend = useTrend(systolic);
   const respRateTrend = useTrend(respRate);
 
-  const isCritical = heartRate >= 120;
+  const isCritical = heartRate >= 120 || elevated;
 
   return (
     <div
@@ -147,10 +125,11 @@ export default function VitalsMonitor() {
 
       <EcgTrace heartRate={heartRate} critical={isCritical} />
 
-      <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4">
+      <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 lg:grid-cols-5">
         <VitalStat label="Heart Rate" value={heartRate} unit="bpm" direction={heartRateTrend} />
-        <VitalStat label="SpO2" value={spo2} unit="%" direction={spo2Trend} />
+        <VitalStat label="HRV" value={hrv} unit="ms" direction={hrvTrend} />
         <VitalStat label="Blood Pressure" value={`${systolic}/${diastolic}`} unit="mmHg" direction={systolicTrend} />
+        <VitalStat label="SpO2" value={spo2} unit="%" direction={spo2Trend} />
         <VitalStat label="Resp. Rate" value={respRate} unit="brpm" direction={respRateTrend} />
       </div>
 
@@ -166,13 +145,14 @@ export default function VitalsMonitor() {
 
       <button
         type="button"
-        onClick={() => setElevated((e) => !e)}
+        onClick={toggleElevated}
         className="mt-4 text-xs text-slate underline-offset-4 hover:text-teal hover:underline"
       >
         {elevated ? "Reset to Normal" : "Simulate Cardiac Event"}
       </button>
       <p className="mt-2 text-[11px] text-slate/70">
-        Simulated preview — live monitoring requires compatible wearable hardware.
+        Helix watches your heart signal continuously and flags changes — it does not measure blood pressure
+        directly. Simulated preview.
       </p>
     </div>
   );

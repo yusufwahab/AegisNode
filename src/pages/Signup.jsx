@@ -30,7 +30,7 @@ export default function Signup() {
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       className="rounded-lg bg-paper p-8 shadow-xl md:p-10"
     >
-      <h1 className="text-2xl text-ink md:text-3xl">Create your Aegis Node profile</h1>
+      <h1 className="text-2xl text-ink md:text-3xl">Create your Helix profile</h1>
       <p className="mt-2 text-[15px] text-slate">
         Takes about five minutes. You can edit everything later.
       </p>

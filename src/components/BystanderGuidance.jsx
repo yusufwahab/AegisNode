@@ -4,7 +4,7 @@ import { Volume2, VolumeX, Loader2, MessageCircleWarning, AlertTriangle } from "
 function buildRecommendation(profile) {
   const sentences = [];
   sentences.push(
-    `This is a safety recommendation for ${profile.name || "this patient"}, generated from their Aegis Node tag.`
+    `This is a safety recommendation for ${profile.name || "this patient"}, generated from their Helix tag.`
   );
   sentences.push("Do not give them food, water, or any medication.");
   sentences.push("Try not to move them unless they are in immediate danger.");

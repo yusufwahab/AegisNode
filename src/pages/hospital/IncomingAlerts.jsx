@@ -110,7 +110,7 @@ export default function IncomingAlerts() {
   }
 
   function handleExport() {
-    downloadCsv("aegis-node-incoming-alerts.csv", buildAlertsCsv(alerts));
+    downloadCsv("helix-incoming-alerts.csv", buildAlertsCsv(alerts));
   }
 
   async function markArrived(alert) {

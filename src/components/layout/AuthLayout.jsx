@@ -15,7 +15,7 @@ export default function AuthLayout() {
 
       <Link to="/" className="absolute left-6 top-6 z-10 flex items-center gap-2 md:left-10 md:top-10">
         <NfcMark className="h-6 w-6" color="#FAF9F6" />
-        <span className="font-display text-lg text-paper">Aegis Node</span>
+        <span className="font-display text-lg text-paper">Helix</span>
       </Link>
 
       <div className="relative z-10 w-full max-w-md">

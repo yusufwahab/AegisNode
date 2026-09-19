@@ -1,6 +1,6 @@
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL;
-const SENDER_NAME = process.env.BREVO_SENDER_NAME || "Aegis Node";
+const SENDER_NAME = process.env.BREVO_SENDER_NAME || "Helix";
 
 // Requirement: fall back to the emergency contact's address whenever a
 // recipient isn't explicitly specified.

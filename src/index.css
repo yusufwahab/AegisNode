@@ -16,13 +16,15 @@
   --color-teal: #0e4f45;
   --color-teal-light: #d9e6e3;
   --color-coral: #e4572e;
+  --color-amber: #b7791f;
+  --color-amber-light: #f3e6c8;
   --color-mist: #e8e6e0;
   --color-slate: #5b6664;
 
   --font-display: "Fraunces", ui-serif, Georgia, serif;
   --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --ease-aegis: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-helix: cubic-bezier(0.22, 1, 0.36, 1);
 
   --radius-sm: 8px;
   --radius-card: 16px;

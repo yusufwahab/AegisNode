@@ -22,7 +22,7 @@ export default function HospitalDashboardPreview() {
         <span className="h-2.5 w-2.5 rounded-full bg-mist" />
         <span className="h-2.5 w-2.5 rounded-full bg-mist" />
         <span className="h-2.5 w-2.5 rounded-full bg-mist" />
-        <span className="ml-3 text-xs text-slate">aegisnode.app/hospital-dashboard</span>
+        <span className="ml-3 text-xs text-slate">helix.app/hospital-dashboard</span>
       </div>
 
       <div className="space-y-3 p-5 md:p-7">

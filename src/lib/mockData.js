@@ -11,6 +11,13 @@ export const mockProfile = {
     relationship: "Wife",
     phone: "+2348030001122",
   },
+  // A fuller contact list for the Emergency Trigger takeover's staggered
+  // "alerting contacts" sequence — emergencyContact above stays the single
+  // primary contact used everywhere else (EmergencyCard, the NFC tag payload).
+  emergencyContacts: [
+    { name: "Ngozi Adegbola", relationship: "Wife", phone: "+2348030001122" },
+    { name: "Chidi Adegbola", relationship: "Brother", phone: "+2348012345678" },
+  ],
   tag: {
     status: "Active",
     id: "NEXUS-001",
@@ -22,7 +29,7 @@ export const mockProfile = {
 export const bloodTypes = ["O+", "O−", "A+", "A−", "B+", "B−", "AB+", "AB−"];
 
 export const scanResult = {
-  id: "AGN-4471-KX",
+  id: "HLX-4471-KX",
   name: "Amara Chukwu",
   dob: "1994-03-12",
   bloodType: "O−",
@@ -40,7 +47,7 @@ export const scanResult = {
 // rows 1-5 are fixed sample patients; the real scan is appended as row 6.
 export const mockDatabaseRows = [
   {
-    id: "AGN-1002",
+    id: "HLX-1002",
     name: "Ngozi Umeh",
     bloodType: "A+",
     allergies: [],
@@ -50,7 +57,7 @@ export const mockDatabaseRows = [
     scannedAt: "Jul 14, 2026, 9:02 AM",
   },
   {
-    id: "AGN-1003",
+    id: "HLX-1003",
     name: "Chidi Obi",
     bloodType: "B+",
     allergies: ["Aspirin"],
@@ -60,7 +67,7 @@ export const mockDatabaseRows = [
     scannedAt: "Jul 14, 2026, 2:47 PM",
   },
   {
-    id: "AGN-1004",
+    id: "HLX-1004",
     name: "Halima Yusuf",
     bloodType: "O−",
     allergies: ["Latex"],
@@ -70,7 +77,7 @@ export const mockDatabaseRows = [
     scannedAt: "Jul 15, 2026, 11:20 AM",
   },
   {
-    id: "AGN-1005",
+    id: "HLX-1005",
     name: "Segun Adewale",
     bloodType: "AB+",
     allergies: [],
@@ -80,7 +87,7 @@ export const mockDatabaseRows = [
     scannedAt: "Jul 15, 2026, 6:35 PM",
   },
   {
-    id: "AGN-1006",
+    id: "HLX-1006",
     name: "Blessing Eze",
     bloodType: "A−",
     allergies: ["Penicillin"],
@@ -95,7 +102,7 @@ export const hospitalAlerts = [
   {
     id: "a1",
     name: "Amara Chukwu",
-    patientId: "AGN-4471-KX",
+    patientId: "HLX-4471-KX",
     bloodType: "O−",
     allergies: ["Penicillin"],
     eta: "4 min",
@@ -104,7 +111,7 @@ export const hospitalAlerts = [
   {
     id: "a2",
     name: "David Okon",
-    patientId: "AGN-2290-RT",
+    patientId: "HLX-2290-RT",
     bloodType: "A+",
     allergies: ["None known"],
     eta: "9 min",
@@ -113,7 +120,7 @@ export const hospitalAlerts = [
   {
     id: "a3",
     name: "Fatima Bello",
-    patientId: "AGN-1187-ZQ",
+    patientId: "HLX-1187-ZQ",
     bloodType: "B−",
     allergies: ["Latex", "Sulfa drugs"],
     eta: "Arrived",
@@ -122,7 +129,7 @@ export const hospitalAlerts = [
   {
     id: "a4",
     name: "Emeka Nwosu",
-    patientId: "AGN-8802-LM",
+    patientId: "HLX-8802-LM",
     bloodType: "AB+",
     allergies: ["None known"],
     eta: "—",
@@ -133,7 +140,7 @@ export const hospitalAlerts = [
 export const newAlertPool = [
   {
     name: "Grace Adeyemi",
-    patientId: "AGN-5531-VN",
+    patientId: "HLX-5531-VN",
     bloodType: "AB−",
     allergies: ["Peanuts", "Aspirin"],
     eta: "6 min",
@@ -141,7 +148,7 @@ export const newAlertPool = [
   },
   {
     name: "Tunde Bakare",
-    patientId: "AGN-3390-QW",
+    patientId: "HLX-3390-QW",
     bloodType: "O+",
     allergies: ["None known"],
     eta: "3 min",
@@ -159,7 +166,7 @@ export const trustStats = [
 export const howItWorksSteps = [
   {
     title: "Tap",
-    copy: "A responder taps any NFC-enabled phone against your Aegis Node tag — no app, no unlocking, no signal required.",
+    copy: "A responder taps any NFC-enabled phone against your Helix tag — no app, no unlocking, no signal required.",
     query: "hands closeup medical",
   },
   {

@@ -31,7 +31,7 @@ function hospitalEmailHtml(profile, scannedAt) {
       <p><strong>Emergency Contact:</strong> ${contact}</p>
       <p><strong>Scanned At:</strong> ${scannedAt}</p>
       <p style="margin-top: 16px; color: #5B6664; font-size: 13px;">
-        A CSV copy of this record is attached. Sent automatically by Aegis Node.
+        A CSV copy of this record is attached. Sent automatically by Helix.
       </p>
     </div>
   `;
@@ -45,11 +45,11 @@ function contactEmailHtml(profile, scannedAt) {
   return `
     <div style="font-family: sans-serif; color: #12181B;">
       <p style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #0E4F45;">
-        Aegis Node Alert
+        Helix Alert
       </p>
       <h2 style="margin: 4px 0 16px;">${profile.name} is currently at ${HOSPITAL_NAME}</h2>
       <p>
-        This is an automated message to let you know that ${profile.name}'s Aegis Node tag was
+        This is an automated message to let you know that ${profile.name}'s Helix tag was
         scanned at <strong>${scannedAt}</strong>, and they are currently receiving care at
         <strong>${HOSPITAL_NAME}</strong>.
       </p>

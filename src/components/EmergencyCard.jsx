@@ -14,7 +14,8 @@ export default function EmergencyCard({ profile, variant = "preview", className 
 
   const subtitle = [profile.id, formatDob(profile.dob)].filter(Boolean).join(" · ");
 
-  const contact = [profile.emergencyContact?.name, profile.emergencyContact?.relationship, profile.emergencyContact?.phone]
+  const contactPhone = profile.emergencyContact?.phone;
+  const contactLabel = [profile.emergencyContact?.name, profile.emergencyContact?.relationship]
     .filter(Boolean)
     .join(" · ");
 
@@ -68,7 +69,19 @@ export default function EmergencyCard({ profile, variant = "preview", className 
 
       <div className={clsx("mt-6 border-t pt-6", isScan ? "border-paper/15" : "border-mist")}>
         <p className={clsx("text-xs uppercase tracking-wider", subtle)}>Emergency Contact</p>
-        <p className={clsx("mt-1 text-[15px]", body)}>{contact || "Not provided"}</p>
+        {contactPhone ? (
+          <a
+            href={`tel:${contactPhone.replace(/[^+\d]/g, "")}`}
+            className={clsx(
+              "mt-1 inline-block text-[15px] font-medium underline-offset-2 hover:underline",
+              isScan ? "text-coral" : "text-teal"
+            )}
+          >
+            {[contactLabel, contactPhone].filter(Boolean).join(" · ")}
+          </a>
+        ) : (
+          <p className={clsx("mt-1 text-[15px]", body)}>Not provided</p>
+        )}
       </div>
     </div>
   );

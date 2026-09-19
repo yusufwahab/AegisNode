@@ -38,7 +38,7 @@ export default function PatientLog() {
   }, []);
 
   function handleExport() {
-    downloadCsv("aegis-node-patient-log.csv", buildAlertsCsv(alerts));
+    downloadCsv("helix-patient-log.csv", buildAlertsCsv(alerts));
   }
 
   return (

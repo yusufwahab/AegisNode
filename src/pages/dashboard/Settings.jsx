@@ -1,11 +1,16 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { RotateCcw, HeartPulse, Siren, ScanLine } from "lucide-react";
 import Card from "../../components/ui/Card";
 import FormField from "../../components/ui/FormField";
 import Toggle from "../../components/ui/Toggle";
 import Button from "../../components/ui/Button";
 import { useToast } from "../../lib/toastContext";
 import { mockProfile } from "../../lib/mockData";
+import { useHealthStore } from "../../store/useHealthStore";
+import { useVitalsStore } from "../../store/useVitalsStore";
+import { useEmergencyStore } from "../../store/useEmergencyStore";
 
 export default function Settings() {
   const [name, setName] = useState(mockProfile.name);
@@ -17,6 +22,8 @@ export default function Settings() {
     smsBackup: true,
   });
   const pushToast = useToast();
+  const navigate = useNavigate();
+  const resetDemoData = useHealthStore((s) => s.resetDemoData);
 
   function handleSave(e) {
     e.preventDefault();
@@ -25,6 +32,23 @@ export default function Settings() {
 
   function handleDelete() {
     pushToast?.("Account deletion requested.");
+  }
+
+  function handleResetDemo() {
+    resetDemoData();
+    useVitalsStore.getState().reset();
+    useEmergencyStore.getState().resolve();
+    pushToast?.("Demo data reset.");
+  }
+
+  function handleSimulateAnomaly() {
+    useVitalsStore.getState().simulateAnomaly();
+    pushToast?.("Simulating HRV anomaly…");
+  }
+
+  function handleSimulateEmergency() {
+    useVitalsStore.setState({ elevated: true });
+    useEmergencyStore.getState().trigger("A simulated cardiac emergency was detected.");
   }
 
   return (
@@ -71,6 +95,33 @@ export default function Settings() {
             checked={notifications.smsBackup}
             onChange={(v) => setNotifications((n) => ({ ...n, smsBackup: v }))}
           />
+        </Card>
+      </div>
+
+      <div className="mt-12">
+        <h2 className="text-lg text-ink">Demo Controls</h2>
+        <p className="mt-1 text-sm text-slate">
+          For live demos only — not a feature of the real product.
+        </p>
+        <Card className="mt-4 border-dashed bg-mist/30">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <Button variant="ghost-ink" onClick={handleResetDemo}>
+              <RotateCcw size={16} strokeWidth={1.5} />
+              Reset demo data
+            </Button>
+            <Button variant="ghost-ink" onClick={handleSimulateAnomaly}>
+              <HeartPulse size={16} strokeWidth={1.5} />
+              Simulate HRV anomaly
+            </Button>
+            <Button variant="secondary" className="border-coral/40 text-coral hover:border-coral" onClick={handleSimulateEmergency}>
+              <Siren size={16} strokeWidth={1.5} />
+              Simulate emergency
+            </Button>
+            <Button variant="ghost-ink" onClick={() => navigate("/scan-demo")}>
+              <ScanLine size={16} strokeWidth={1.5} />
+              Preview emergency profile
+            </Button>
+          </div>
         </Card>
       </div>
 

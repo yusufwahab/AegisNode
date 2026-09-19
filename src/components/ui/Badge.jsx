@@ -4,6 +4,7 @@ const TONES = {
   neutral: "bg-mist text-ink",
   teal: "bg-teal-light text-teal",
   coral: "bg-coral/10 text-coral",
+  amber: "bg-amber-light text-amber",
   outline: "bg-transparent text-slate border border-mist",
 };
 

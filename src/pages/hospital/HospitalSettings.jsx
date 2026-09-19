@@ -7,7 +7,7 @@ import { useToast } from "../../lib/toastContext";
 
 export default function HospitalSettings() {
   const [org, setOrg] = useState("Coastal General Hospital");
-  const [webhook, setWebhook] = useState("https://coastal-general.example/webhooks/aegis");
+  const [webhook, setWebhook] = useState("https://coastal-general.example/webhooks/helix");
   const [alertsEnabled, setAlertsEnabled] = useState(true);
   const pushToast = useToast();
 

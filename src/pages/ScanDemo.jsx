@@ -33,7 +33,10 @@ export default function ScanDemo() {
   const [urlProfile] = useState(() => parseTagParams(searchParams));
   const cameFromTagUrl = Boolean(urlProfile.id || urlProfile.name);
 
-  const [stage, setStage] = useState(cameFromTagUrl ? "result" : "idle"); // idle | waiting | playing | result
+  // Defaults straight to "result" (not "idle") so the responder view is fully
+  // populated the moment this page loads — "Scan Again" below re-opens the
+  // idle/tap-to-simulate flow as a secondary, optional interaction.
+  const [stage, setStage] = useState("result"); // idle | waiting | playing | result
   const [profile, setProfile] = useState(cameFromTagUrl ? urlProfile : scanResult);
   const [nfcError, setNfcError] = useState("");
   const abortRef = useRef(null);
@@ -51,7 +54,7 @@ export default function ScanDemo() {
 
   function handleCheckDatabase() {
     const csv = buildDatabaseCsv(mockDatabaseRows, profile, scannedAt);
-    downloadCsv(`aegis-node-database-${profile.id || "scan"}.csv`, csv);
+    downloadCsv(`helix-database-${profile.id || "scan"}.csv`, csv);
   }
 
   async function handleNotify() {

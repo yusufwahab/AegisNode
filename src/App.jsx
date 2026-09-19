@@ -4,6 +4,9 @@ import PublicLayout from "./components/layout/PublicLayout";
 // import AuthLayout from "./components/layout/AuthLayout"; // auth disabled for now — see routes below
 import ConsumerDashboardLayout from "./components/layout/ConsumerDashboardLayout";
 import HospitalDashboardLayout from "./components/layout/HospitalDashboardLayout";
+import EmergencyTakeover from "./components/EmergencyTakeover";
+import AnomalyModalHost from "./components/AnomalyModalHost";
+import { useVitalsTicker } from "./hooks/useVitalsTicker";
 
 import Landing from "./pages/Landing";
 import HowItWorks from "./pages/HowItWorks";
@@ -17,6 +20,10 @@ import ScanDemo from "./pages/ScanDemo";
 import NotFound from "./pages/NotFound";
 
 import Overview from "./pages/dashboard/Overview";
+import DailyLog from "./pages/dashboard/DailyLog";
+import Insights from "./pages/dashboard/Insights";
+import Trends from "./pages/dashboard/Trends";
+import FoodIntelligence from "./pages/dashboard/FoodIntelligence";
 import TagPage from "./pages/dashboard/Tag";
 import Vitals from "./pages/dashboard/Vitals";
 import Settings from "./pages/dashboard/Settings";
@@ -26,6 +33,8 @@ import PatientLog from "./pages/hospital/PatientLog";
 import HospitalSettings from "./pages/hospital/HospitalSettings";
 
 export default function App() {
+  useVitalsTicker();
+
   return (
     <ToastProvider>
       <Routes>
@@ -52,6 +61,10 @@ export default function App() {
 
         <Route element={<ConsumerDashboardLayout />}>
           <Route path="/dashboard" element={<Overview />} />
+          <Route path="/dashboard/log" element={<DailyLog />} />
+          <Route path="/dashboard/insights" element={<Insights />} />
+          <Route path="/dashboard/trends" element={<Trends />} />
+          <Route path="/dashboard/food" element={<FoodIntelligence />} />
           <Route path="/dashboard/tag" element={<TagPage />} />
           <Route path="/dashboard/vitals" element={<Vitals />} />
           <Route path="/dashboard/settings" element={<Settings />} />
@@ -65,6 +78,9 @@ export default function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+
+      <EmergencyTakeover />
+      <AnomalyModalHost />
     </ToastProvider>
   );
 }

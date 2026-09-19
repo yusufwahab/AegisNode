@@ -39,7 +39,7 @@ export default function NfcScanVisual({
 
   return (
     <div className={className} style={{ position: "relative" }}>
-      {/* The Aegis Node tag, peeking out from behind the phone's lower-right edge */}
+      {/* The Helix tag, peeking out from behind the phone's lower-right edge */}
       <div
         className="absolute bottom-[9%] right-0 z-0 flex h-[24%] w-[42%] items-end justify-start rounded-card p-3 shadow-lg"
         style={{

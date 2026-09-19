@@ -24,5 +24,5 @@ app.use("/api/scans", scansRouter);
 app.use("/api/notify", notifyRouter);
 
 app.listen(PORT, () => {
-  console.log(`Aegis Node API listening on port ${PORT}`);
+  console.log(`Helix API listening on port ${PORT}`);
 });

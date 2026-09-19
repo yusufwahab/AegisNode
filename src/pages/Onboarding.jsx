@@ -11,25 +11,31 @@ import FormField from "../components/ui/FormField";
 import EmergencyCard from "../components/EmergencyCard";
 import SuccessCheck from "../components/ui/SuccessCheck";
 import { stepVariants } from "../lib/motion";
+import { mockProfile } from "../lib/mockData";
 
 const STEPS = ["Basics", "Medical", "Emergency Contact", "Review"];
 
+// This route doubles as the "Medical Profile" edit screen linked from the
+// dashboard nav — since a profile already exists (mockProfile), it opens
+// straight on the completed Review step instead of an empty first step.
+// Stepping Back re-enters the wizard as a secondary, optional edit flow.
 export default function Onboarding() {
   const navigate = useNavigate();
-  const [stepIndex, setStepIndex] = useState(0);
+  const [stepIndex, setStepIndex] = useState(STEPS.length - 1);
   const [direction, setDirection] = useState(1);
   const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
-    name: "",
-    dob: "",
+    name: mockProfile.name,
+    dob: mockProfile.dob,
     photo: null,
-    bloodType: "",
-    allergies: [],
-    conditions: [],
+    bloodType: mockProfile.bloodType,
+    allergies: mockProfile.allergies,
+    conditions: mockProfile.conditions,
+    medications: mockProfile.medications,
     contactName: "",
-    contactRelationship: "",
-    contactPhone: "",
+    contactRelationship: mockProfile.emergencyContact.relationship,
+    contactPhone: mockProfile.emergencyContact.phone,
   });
 
   function update(patch) {
@@ -56,8 +62,9 @@ export default function Onboarding() {
     bloodType: form.bloodType || "—",
     allergies: form.allergies,
     conditions: form.conditions,
+    medications: form.medications,
     emergencyContact: {
-      name: form.contactName || "—",
+      name: form.contactName || undefined,
       relationship: form.contactRelationship || "—",
       phone: form.contactPhone || "—",
     },
@@ -68,7 +75,7 @@ export default function Onboarding() {
       <div className="flex min-h-screen flex-col items-center justify-center gap-5 bg-paper px-6 text-center">
         <SuccessCheck />
         <div>
-          <h1 className="text-2xl text-ink">Profile confirmed</h1>
+          <h1 className="text-2xl text-ink">Profile updated</h1>
           <p className="mt-1 text-[15px] text-slate">Taking you to your dashboard…</p>
         </div>
       </div>
@@ -80,7 +87,7 @@ export default function Onboarding() {
       <header className="content-container flex items-center justify-between py-6">
         <Link to="/" className="flex items-center gap-2">
           <NfcMark className="h-5 w-5" color="#0E4F45" />
-          <span className="font-display text-base text-ink">Aegis Node</span>
+          <span className="font-display text-base text-ink">Helix</span>
         </Link>
         <Link to="/dashboard" className="text-sm text-slate hover:text-teal">
           Save &amp; exit
@@ -133,6 +140,12 @@ export default function Onboarding() {
                     onChange={(conditions) => update({ conditions })}
                     placeholder="e.g. Type 1 Diabetes — press Enter"
                   />
+                  <ChipInput
+                    label="Medications"
+                    values={form.medications}
+                    onChange={(medications) => update({ medications })}
+                    placeholder="e.g. Metformin — press Enter"
+                  />
                 </div>
               )}
 
@@ -181,7 +194,7 @@ export default function Onboarding() {
             </Button>
           ) : (
             <Button variant="coral" onClick={handleConfirm}>
-              Confirm &amp; Finish
+              Save changes
             </Button>
           )}
         </div>

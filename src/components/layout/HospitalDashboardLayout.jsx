@@ -15,7 +15,7 @@ export default function HospitalDashboardLayout() {
       <aside className="hidden w-60 shrink-0 flex-col border-r border-mist bg-ink md:flex">
         <Link to="/" className="flex items-center gap-2 px-6 py-6">
           <NfcMark className="h-5 w-5" color="#FAF9F6" />
-          <span className="font-display text-base text-paper">Aegis Node</span>
+          <span className="font-display text-base text-paper">Helix</span>
         </Link>
         <p className="px-6 pb-4 text-[11px] uppercase tracking-wider text-paper/40">
           Hospital Console
